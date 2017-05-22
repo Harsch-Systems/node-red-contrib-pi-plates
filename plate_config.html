@@ -1,0 +1,42 @@
+<script type="text/javascript">
+    RED.nodes.registerType('pi_plate', {
+        category: 'config',
+        defaults: {
+            model: { value: '', requried: true},
+            address: { value: '0', required: true}
+        },
+        label: function () {
+            return (this.model + ":" + this.address);
+        }
+
+    });
+</script>
+
+<script type="text/x-red" data-template-name="pi_plate">
+    <div class="form-row">
+        <label for="node-config-input-model"><i class="icon-tag"></i> Plate Model</label>
+        <select id="node-config-input-model">
+            <option value="RELAYPlate">RELAYPlate</option>
+            <option value="DACQPlate">DACQPlate</option>
+            <option value="MOTORPlate">MOTORPlate</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-address"><i class="icon-tag"></i> Plate Address (Jumpers)</label>
+        <select id="node-config-input-address">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+        </select>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="pi_plate">
+    <p>help text for pi-plates config node</p>
+</script>

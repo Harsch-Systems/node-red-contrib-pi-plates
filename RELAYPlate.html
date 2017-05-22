@@ -1,0 +1,47 @@
+<script type="text/javascript">
+    RED.nodes.registerType('ppRelay', {
+        category: 'Pi_Plates',
+        color: '#a6bbcf',
+        defaults: {
+            plate: { value: '', type: "pi_plate"},
+            name: { value: ''},
+            position: { value: "1", required: true}
+        },
+        inputs: 1,
+        outputs: 0,
+        icon: 'file.png',
+        label: function () {
+            return (this.name || 'relay');
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="ppRelay">
+    <div class="form-row">
+        <label for="node-input-plate"><i class="icon-tag"></i> Plate</label>
+        <input type="text" id="node-input-plate">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-position"><i class="icon-tag"></i> Relay #</label>
+        <select id="node-input-position">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+        </select>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="ppRelay">
+    <p>Relays are Normally Open switches that can be turned on, off, or toggled.</p>
+    <p>Send a 0 or '0' to this node to open the contact (turn load off).</p>
+    <p>Send a 1 or '1' to this node to close the contact (turn load on).</p>
+    <p>Send a 2 or '2' to toggle the relay.</p>
+</script>
