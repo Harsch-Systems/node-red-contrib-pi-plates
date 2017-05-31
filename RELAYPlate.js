@@ -7,7 +7,7 @@ module.exports = function (RED) {
         var node = this;
         node.on('input', function (msg) {
             //do something
-            node.debug('relay');
+            node.log('relay');
             //node.send(msg);
         });
     }
