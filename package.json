@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-pi-plates",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "control Pi-Plates boards from Node-RED",
   "scripts": {
     "test": "scripts/test"
@@ -12,15 +12,8 @@
   "node-red": {
     "nodes": {
         "pi_plate": "plate_config.js",
-        "ppRelay": "RELAYPlate.js",
-        "ppIn": "DACQPlate.js",
-        "ppOut": "DACQPlate.js",
-        "ppPWM": "DACQPlate.js",
-        "ppADC": "DACQPlate.js",
-        "ppDAC": "DACQPlate.js",
-        "ppButton": "DACQPlate.js",
-        "ppSMotor": "MOTORPlate.js",
-        "ppDCMotor": "MOTORPlate.js"
+        "ppRelay": "relay.js",
+        "ppADC": "adc.js"
     }
   },
   "dependencies": {
