@@ -17,7 +17,6 @@
     }
   },
   "dependencies": {
-    "rpio": "0.9.16"
   },
   "keywords": [
     "pi-plates",

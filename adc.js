@@ -1,14 +1,11 @@
-var DAQCplate = require('pi-plates').DAQCplate;
-
 module.exports = function (RED) {
     function ADCNode(config) {
         RED.nodes.createNode(this, config);
-        this.config_plate = RED.nodes.getNode(config.config_plate);
-	this.control_plate = new DAQCplate(0);
+        this.plate = RED.nodes.getNode(config.config_plate).plate;
 	this.channel = config.channel;
         var node = this;
         node.on('input', function (msg) {
-            var volts = this.control_plate.getADC(this.channel);
+            var volts = this.plate.getADC(this.plate);
             var msg = {payload: volts}
             node.send(msg);
         });
