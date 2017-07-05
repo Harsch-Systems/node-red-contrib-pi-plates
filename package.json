@@ -13,7 +13,9 @@
     "nodes": {
         "pi_plate": "plate_config.js",
         "ppRelay": "relay.js",
-        "ppADC": "adc.js"
+        "ppADC": "adc.js",
+        "ppDIN": "din.js",
+        "ppDOUT": "dout.js"
     }
   },
   "dependencies": {
