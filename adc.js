@@ -5,7 +5,7 @@ module.exports = function (RED) {
 	this.channel = config.channel;
         var node = this;
         node.on('input', function (msg) {
-            var volts = this.plate.getADC(this.plate);
+            var volts = this.plate.getADC(this.channel);
             var msg = {payload: volts}
             node.send(msg);
         });
