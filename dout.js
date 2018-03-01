@@ -7,8 +7,10 @@ module.exports = function (RED) {
         node.on('input', function (msg) {
             if (msg.payload == "on") {
                 this.plate.setDOUTbit(this.output);
+                this.status({text: '1'});
             } else if (msg.payload == "off") {
                 this.plate.clrDOUTbit(this.output);
+                this.status({text: '0'});
             }
             var state = this.plate.getDOUTbit(this.output);
             var msg = {payload: state}
