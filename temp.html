@@ -1,0 +1,54 @@
+<script type="text/javascript">
+    RED.nodes.registerType('ppTEMP', {
+        category: 'Pi_Plates',
+        color: '#a6bbcf',
+        defaults: {
+            config_plate: { value: '', type: "pi_plate"},
+            name: { value: ''},
+            scale: { value: 'f'},
+            input: { value: "0", required: true}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: 'file.png',
+        label: function () {
+            return (this.name || 'temp');
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="ppTEMP">
+    <div class="form-row">
+        <label for="node-input-config_plate"><i class="icon-tag"></i> Plate</label>
+        <input type="text" id="node-input-config_plate">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-scale"><i class="icon-tag"></i> Temperature Scale</label>
+        <select id="node-input-scale">
+            <option value="f">Fahrenheit</option>
+            <option value="c">Celsius</option>
+            <option value="k">Kelvin</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-input"><i class="icon-tag"></i> Input #</label>
+        <select id="node-input-input">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+        </select>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="ppTEMP">
+    <p>DS18X20 1-wire sensor hooked to digital input.  Returns temperature in specified scale</p>
+</script>

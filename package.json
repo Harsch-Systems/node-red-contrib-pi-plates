@@ -15,7 +15,8 @@
       "ppRelay": "relay.js",
       "ppADC": "adc.js",
       "ppDIN": "din.js",
-      "ppDOUT": "dout.js"
+      "ppDOUT": "dout.js",
+      "ppTEMP": "temp.js"
     }
   },
   "dependencies": {
