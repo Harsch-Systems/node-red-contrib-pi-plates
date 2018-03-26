@@ -2,25 +2,25 @@ module.exports = function (RED) {
     function RelayNode(config) {
         RED.nodes.createNode(this, config);
         this.plate = RED.nodes.getNode(config.config_plate).plate;
-	this.relay = config.relay;
+        this.relay = parseInt(config.relay, 10);
+        this.state = "UNKNOWN";
         var node = this;
         node.on('input', function (msg) {
+            const obj = {args: {relay: node.relay}};
             if (msg.payload == "on") {
-                this.plate.relayON(this.relay);
+                obj['cmd'] = "relayON";
             } else if (msg.payload == "off") {
-                this.plate.relayOFF(this.relay);
+                obj['cmd'] = "relayOFF";
             } else if (msg.payload == "toggle") {
-                this.plate.relayTOGGLE(this.relay);
+                obj['cmd'] = "relayTOGGLE";
             }
-
-            var states = this.plate.relaySTATE();
-            var mystate = states[this.relay - 1];
-            var msg = {payload: mystate}
-            node.send(msg);
-        });
-
-        this.on('close', function () {
-            this.plate.relayALL(0);
+            node.plate.send(obj, (reply) => {
+                if (reply.state != node.state) {
+                    node.state = reply.state
+                    node.send({payload: node.state});
+                }
+                node.status({text: node.state});
+            });
         });
     }
     RED.nodes.registerType("ppRelay", RelayNode);

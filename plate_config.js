@@ -1,18 +1,15 @@
-var RELAYplate = require('pi-plates').RELAYplate;
-var DAQCplate = require('pi-plates').DAQCplate;
-var MOTORplate = require('pi-plates').MOTORplate;
+const { RELAYplate, DAQCplate, MOTORplate } = require('pi-plates');
 
 module.exports = function (RED) {
     function PlateNode(config) {
         RED.nodes.createNode(this, config);
         this.model = config.model;
         this.address = config.address;
-
-	var addr = parseInt(this.address, 10);
+        const addr = parseInt(this.address, 10);
 
         switch (this.model) {
             case "RELAYplate":
-                this.plate = new RELAYplate(addr);
+                this.plate = new RELAYplate(1);
                 break;
             case "DAQCplate":
                 this.plate = new DAQCplate(addr);

@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-pi-plates",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "control Pi-Plates boards from Node-RED",
   "scripts": {
     "test": "scripts/test"
@@ -11,14 +11,15 @@
   },
   "node-red": {
     "nodes": {
-        "pi_plate": "plate_config.js",
-        "ppRelay": "relay.js",
-        "ppADC": "adc.js",
-        "ppDIN": "din.js",
-        "ppDOUT": "dout.js"
+      "pi_plate": "plate_config.js",
+      "ppRelay": "relay.js",
+      "ppADC": "adc.js",
+      "ppDIN": "din.js",
+      "ppDOUT": "dout.js"
     }
   },
   "dependencies": {
+    "pi-plates": "0.0.x"
   },
   "keywords": [
     "pi-plates",

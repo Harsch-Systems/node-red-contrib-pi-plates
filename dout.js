@@ -2,19 +2,22 @@ module.exports = function (RED) {
     function DOUTNode(config) {
         RED.nodes.createNode(this, config);
         this.plate = RED.nodes.getNode(config.config_plate).plate;
-	this.output = config.output;
+        this.output = parseInt(config.output, 10);
         var node = this;
         node.on('input', function (msg) {
+            const obj = {args: {bit: node.output}};
             if (msg.payload == "on") {
-                this.plate.setDOUTbit(this.output);
-                this.status({text: '1'});
+                obj['cmd'] = "setDOUTbit";
             } else if (msg.payload == "off") {
-                this.plate.clrDOUTbit(this.output);
-                this.status({text: '0'});
+                obj['cmd'] = "clrDOUTbit";
+            } else if (msg.payload == "toggle") {
+                obj['cmd'] = "toggleDOUTbit";
             }
-            var state = this.plate.getDOUTbit(this.output);
-            var msg = {payload: state}
-            node.send(msg);
+            node.plate.send(obj, (reply) => {
+                node.state = reply.state
+                node.status({text: node.state});
+                node.send({payload: node.state});
+            });
         });
 
         this.on('close', function () {

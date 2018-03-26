@@ -1,15 +1,17 @@
 module.exports = function (RED) {
     function DINNode(config) {
         RED.nodes.createNode(this, config);
-        this.plate = RED.nodes.getNode(config.config_plate).plate;
-	this.input = config.input;
         var node = this;
-        this.status({text: this.plate.getDINbit(this.input)});
+        node.plate = RED.nodes.getNode(config.config_plate).plate;
+        node.input = parseInt(config.input, 10);
+        node.state = 0;
         node.on('input', function (msg) {
-            var state = this.plate.getDINbit(this.input);
-            this.status({text: state});
-            var msg = {payload: state}
-            node.send(msg);
+            const obj = {cmd: "getDINbit", args: {bit: node.input}};
+            node.plate.send(obj, (reply) => {
+                node.state = reply.state
+                node.status({text: node.state});
+                node.send({payload: node.state});
+            });
         });
 
         this.on('close', function () {
