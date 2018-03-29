@@ -9,7 +9,7 @@ module.exports = function (RED) {
 
         switch (this.model) {
             case "RELAYplate":
-                this.plate = new RELAYplate(1);
+                this.plate = new RELAYplate(addr);
                 break;
             case "DAQCplate":
                 this.plate = new DAQCplate(addr);
