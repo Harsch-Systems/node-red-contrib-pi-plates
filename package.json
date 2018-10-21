@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-pi-plates",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "control Pi-Plates boards from Node-RED",
   "scripts": {
     "test": "scripts/test"
@@ -23,12 +23,11 @@
     "pi-plates": "0.0.x"
   },
   "keywords": [
+    "node-red",
     "pi-plates",
-    "relays",
-    "raspberry",
-    "pi",
-    "motor",
-    "control",
+    "Pi",
+    "Plates",
+    "relay",
     "automation",
     "adc",
     "dac",
