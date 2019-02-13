@@ -8,7 +8,7 @@ module.exports = function (RED) {
         node.on('input', function (msg) {
             if (typeof msg.payload == "number" &&
                 (msg.payload >= 0) &&
-                (msg.payload <= 4.097)) {
+                (msg.payload <= 4.095)) {
                 const obj = {cmd: "setDAC", args: {channel: node.channel, value: msg.payload}};
                 node.plate.send(obj, (reply) => {
                     node.value = reply.value;
