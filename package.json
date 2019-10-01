@@ -17,6 +17,7 @@
       "ppDAC": "dac.js",
       "ppDIN": "din.js",
       "ppDOUT": "dout.js",
+      "ppFREQ": "freq.js",
       "ppTEMP": "temp.js",
       "ppTHERMO": "thermo.js"
     }
