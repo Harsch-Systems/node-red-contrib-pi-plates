@@ -1,0 +1,59 @@
+<script type="text/javascript">
+    RED.nodes.registerType('ppTHERMO', {
+        category: 'Pi_Plates',
+        color: '#a6bbcf',
+        defaults: {
+            config_plate: { value: '', type: "pi_plate"},
+            name: { value: ''},
+            channel: { value: "1", required: true}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: 'file.png',
+        label: function () {
+            return (this.name || 'temp');
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="ppTHERMO">
+    <div class="form-row">
+        <label for="node-input-config_plate"><i class="icon-tag"></i> Plate</label>
+        <input type="text" id="node-input-config_plate">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+<!--
+    <div class="form-row">
+        <label for="node-input-scale"><i class="icon-tag"></i> Temperature Scale</label>
+        <select id="node-input-scale">
+            <option value="Celcius">Celsius</option>
+            <option value="Fahrenheit">Fahrenheit</option>
+            <option value="Kelvin">Kelvin</option>
+        </select>
+    </div>
+-->
+    <div class="form-row">
+        <label for="node-input-channel"><i class="icon-tag"></i> Input #</label>
+        <select id="node-input-channel">
+            <option value="1">TC1</option>
+            <option value="2">TC2</option>
+            <option value="3">TC3</option>
+            <option value="4">TC4</option>
+            <option value="5">TC5</option>
+            <option value="6">TC6</option>
+            <option value="7">TC7</option>
+            <option value="8">TC8</option>
+            <option value="9">DS9</option>
+            <option value="10">DS10</option>
+            <option value="11">DS11</option>
+            <option value="12">DS12</option>
+        </select>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="ppTHERMO">
+    <p>Temperature Input from THERMOplate board.  Inputs 1-8 are K-type thermocouple, 9-12 are DS18B20 1-wire devices.  Returned values are in degrees Celcius.</p>
+</script>
