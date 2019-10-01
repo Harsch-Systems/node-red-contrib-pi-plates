@@ -6,7 +6,8 @@ module.exports = function (RED) {
         node.channel = parseInt(config.channel, 10);
         node.temperature = 0;
         node.on('input', function (msg) {
-            const obj = {cmd: "getTEMP", args: {channel: node.channel}};
+            const cmd = node.channel==0 ? 'getCOLD' : 'getTEMP';
+            const obj = {cmd: cmd, args: {channel: node.channel}};
             node.plate.send(obj, (reply) => {
                 node.temperature = reply.value;
                 node.status({text: node.temperature});
