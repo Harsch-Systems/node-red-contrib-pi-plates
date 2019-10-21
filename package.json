@@ -18,6 +18,7 @@
       "ppDIN": "din.js",
       "ppDOUT": "dout.js",
       "ppFREQ": "freq.js",
+      "ppLED": "led.js",
       "ppTEMP": "temp.js",
       "ppTHERMO": "thermo.js"
     }
