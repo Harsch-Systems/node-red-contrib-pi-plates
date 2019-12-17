@@ -1,0 +1,37 @@
+<script type="text/javascript">
+    RED.nodes.registerType('ppLED', {
+        category: 'Pi_Plates',
+        color: '#a6bbcf',
+        defaults: {
+            config_plate: { value: '', type: "pi_plate"},
+            name: { value: ''},
+            output: { value: "0", required: true}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: 'file.png',
+        label: function () {
+            return (this.name || 'led');
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="ppLED">
+    <div class="form-row">
+        <label for="node-input-config_plate"><i class="icon-tag"></i> Plate</label>
+        <input type="text" id="node-input-config_plate">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="ppLED">
+    <p>Control an LED on a DAQCplate, DAQC2plate, RELAYplate or THERMOplate. The ppLED
+    node accepts a string input. For all plate types, 'off' will turn the LED off. When
+    used with a RELAYplate or THERMOplate, any other value will turn the LED on. The
+    DAQCplate accepts 'red', 'green' or 'yellow' to turn on the red, green or both LEDs
+    respectively. The DAQC2plate accepts 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan'
+    and 'white'.</p>
+</script>
