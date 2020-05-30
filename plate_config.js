@@ -1,4 +1,4 @@
-const { RELAYplate, DAQCplate, DAQC2plate, MOTORplate, THERMOplate } = require('pi-plates');
+const { RELAYplate, DAQCplate, DAQC2plate, MOTORplate, THERMOplate, TINKERplate } = require('pi-plates');
 
 module.exports = function (RED) {
     function PlateNode(config) {
@@ -23,6 +23,9 @@ module.exports = function (RED) {
             case "THERMOplate":
                 this.plate = new THERMOplate(addr);
                 break;
+	    case "TINKERplate":
+		this.plate = new TINKERplate(addr);
+		break;
             default:
                 this.error('incorrect plate specifier');
                 break;
