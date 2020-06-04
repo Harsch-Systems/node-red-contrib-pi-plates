@@ -34,7 +34,7 @@ module.exports = function (RED) {
                     node.status({text: node.state});
                 });
             }else{
-                //TODO: Handle invalid message
+                throw "invalid plate or input";
             }
         });
     }

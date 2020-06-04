@@ -9,8 +9,10 @@ module.exports = function (RED) {
             if (reply.state == 1 && ((type == "DAQCplate" || type == "DAQC2plate") && this.output < 7 || type == "TINKERplate" && this.output > 0)){
                 this.status({fill: "green", shape: "ring", text: "plate validated"});
                 this.verified = true;
-                const conf = {cmd: "setOUT", args: {bit: this.output}};
-                this.plate.send(conf, (reply) => {});
+                if (type == "TINKERplate"){
+                    const conf = {cmd: "setOUT", args: {bit: this.output}};
+                    this.plate.send(conf, (reply) => {});
+                }
             }else{
                 this.status({fill: "red", shape: "ring", text: "invalid plate or input"});
                 this.verified = false;
@@ -33,7 +35,7 @@ module.exports = function (RED) {
                     node.send({payload: node.state});
                 });
             }else{
-                //TODO: Handle invalid message
+                throw "invalid plate or input";
             }
         });
 

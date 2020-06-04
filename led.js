@@ -32,7 +32,7 @@ module.exports = function (RED) {
                     node.send({ payload: node.state });
                 });
             }else{
-                //TODO: Handle invalid message
+                throw "invalid plate or input";
             }
         });
 

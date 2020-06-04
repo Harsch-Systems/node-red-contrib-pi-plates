@@ -9,8 +9,10 @@
             var type = RED.nodes.getNode(config.config_plate).model;
             if (reply.state == 1 && ((type == "DAQCplate" || type == "DAQC2plate") && node.input < 8 || type == "TINKERplate" && node.input > 0)){
                 this.status({fill: "green", shape: "ring", text: "plate validated"});
-                const conf = {cmd: "setIN", args: {bit: node.input}};
-                node.plate.send(conf, (reply) => {});
+                if (type == "TINKERplate"){
+                    const conf = {cmd: "setIN", args: {bit: node.input}};
+                    node.plate.send(conf, (reply) => {});
+                }
                 node.verified = true;
             }else{
                 this.status({fill: "red", shape: "ring", text: "invalid plate or input"});
@@ -27,7 +29,7 @@
                     node.send({payload: node.state});
                 });
             }else{
-                //TODO: Handle invalid messages
+                throw "invalid plate or input";
             }
         });
 

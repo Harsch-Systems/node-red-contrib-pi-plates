@@ -31,7 +31,7 @@ module.exports = function (RED) {
                     this.warn("invalid DAC value: ignoring");
                 }
             }else{
-                //TODO: Handle invalid message
+                throw "invalid plate or input";
             }
         });
 
