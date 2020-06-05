@@ -18,23 +18,28 @@ module.exports = function (RED) {
         var node = this;
         node.on('input', function (msg) {
             if (node.verified){
-                const obj = {args: {relay: node.relay}};
-                if (msg.payload == "on") {
-                    obj['cmd'] = "relayON";
-                } else if (msg.payload == "off") {
-                    obj['cmd'] = "relayOFF";
-                } else if (msg.payload == "toggle") {
-                    obj['cmd'] = "relayTOGGLE";
-                }
-                node.plate.send(obj, (reply) => {
-                    if (reply.state != node.state) {
-                        node.state = reply.state
-                        node.send({payload: node.state});
+                var validInputs = ["on", "off", "toggle"];
+                if (typeof msg.payload === 'string' && validInputs.includes(msg.payload)){
+                    const obj = {args: {relay: node.relay}};
+                    if (msg.payload == "on") {
+                        obj['cmd'] = "relayON";
+                    } else if (msg.payload == "off") {
+                        obj['cmd'] = "relayOFF";
+                    } else if (msg.payload == "toggle") {
+                        obj['cmd'] = "relayTOGGLE";
                     }
-                    node.status({text: node.state});
-                });
+                    node.plate.send(obj, (reply) => {
+                        if (reply.state != node.state) {
+                            node.state = reply.state
+                            node.send({payload: node.state});
+                        }
+                        node.status({text: node.state});
+                    });
+                }else{
+                    node.log("invalid node input");
+                }
             }else{
-                throw "invalid plate or input";
+                node.log("invalid plate or input");
             }
         });
     }

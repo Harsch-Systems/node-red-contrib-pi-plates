@@ -16,23 +16,27 @@ module.exports = function (RED) {
         var node = this;
         node.on('input', function (msg) {
             if(node.verified){
-                const obj = {
-                    cmd: 'setLED',
-                    args: { color: msg.payload }
-                };
+                if(typeof msg.payload == "string"){
+                    const obj = {
+                        cmd: 'setLED',
+                        args: { color: msg.payload }
+                    };
 
-                const pt = node.plate.plate_type;
-                if (pt == 'THERMO' || pt == 'RELAY') {
-                    obj['cmd'] = (msg.payload == 'off' ? "clrLED" : "setLED");
+                    const pt = node.plate.plate_type;
+                    if (pt == 'THERMO' || pt == 'RELAY') {
+                        obj['cmd'] = (msg.payload == 'off' ? "clrLED" : "setLED");
+                    }
+
+                    node.plate.send(obj, (reply) => {
+                        node.state = reply.state
+                        node.status({ text: node.state });
+                        node.send({ payload: node.state });
+                    });
+                }else{
+                    node.log("invalid input type");
                 }
-
-                node.plate.send(obj, (reply) => {
-                    node.state = reply.state
-                    node.status({ text: node.state });
-                    node.send({ payload: node.state });
-                });
             }else{
-                throw "invalid plate or input";
+                node.log("invalid plate or input");
             }
         });
 

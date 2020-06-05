@@ -21,21 +21,26 @@ module.exports = function (RED) {
         var node = this;
         node.on('input', function (msg) {
             if (node.verified){
-                const obj = {args: {bit: node.output}};
-                if (msg.payload == "on") {
-                    obj['cmd'] = "setDOUTbit";
-                } else if (msg.payload == "off") {
-                    obj['cmd'] = "clrDOUTbit";
-                } else if (msg.payload == "toggle") {
-                    obj['cmd'] = "toggleDOUTbit";
+                var validInputs = ["on", "off", "toggle"];
+                if (typeof msg.payload == "string" && validInputs.includes(msg.payload)){
+                    const obj = {args: {bit: node.output}};
+                    if (msg.payload == "on") {
+                        obj['cmd'] = "setDOUTbit";
+                    } else if (msg.payload == "off") {
+                        obj['cmd'] = "clrDOUTbit";
+                    } else if (msg.payload == "toggle") {
+                        obj['cmd'] = "toggleDOUTbit";
+                    }
+                    node.plate.send(obj, (reply) => {
+                        node.state = reply.state
+                        node.status({text: node.state});
+                        node.send({payload: node.state});
+                    });
+                }else{
+                    node.log("invalid node input");
                 }
-                node.plate.send(obj, (reply) => {
-                    node.state = reply.state
-                    node.status({text: node.state});
-                    node.send({payload: node.state});
-                });
             }else{
-                throw "invalid plate or input";
+                node.log("invalid plate or input");
             }
         });
 

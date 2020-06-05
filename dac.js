@@ -28,10 +28,10 @@ module.exports = function (RED) {
                         node.send({payload: node.value});
                     });
                 } else {
-                    this.warn("invalid DAC value: ignoring");
+                    node.log("invalid DAC value: ignoring");
                 }
             }else{
-                throw "invalid plate or input";
+                node.log("invalid plate or input");
             }
         });
 

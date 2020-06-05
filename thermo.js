@@ -26,7 +26,7 @@ module.exports = function (RED) {
                     node.send({payload: node.temperature});
                 });
             }else{
-                throw "invalid plate or input";
+                node.log("invalid plate or input");
             }
         });
 

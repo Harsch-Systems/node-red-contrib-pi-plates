@@ -29,7 +29,7 @@
                     node.send({payload: node.state});
                 });
             }else{
-                throw "invalid plate or input";
+                node.log("invalid plate or input");
             }
         });
 
