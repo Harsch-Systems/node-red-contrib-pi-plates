@@ -7,6 +7,7 @@ communication with <a href="https://pi-plates.com">Pi-Plates</a> boards.
  - RELAYplate
  - DAQCplate
  - MOTORplate
+ - TINKERplate
 
 Install
 -------
