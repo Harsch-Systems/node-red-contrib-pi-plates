@@ -7,7 +7,7 @@ module.exports = function (RED) {
         node.scale = config.scale;
         node.temp = 0;
         const verifier = {cmd: "VERIFY", args: {}};
-        node.plate.send(verifier, (reply) => {
+        let python_status = node.plate.send(verifier, (reply) => {
             var type = RED.nodes.getNode(config.config_plate).model;
             if (reply.state == 1 && (type == "DAQCplate" && node.input < 8 || type == "TINKERplate" && node.input > 0)){
                 this.status({fill: "green", shape: "ring", text: "plate validated"});
@@ -22,6 +22,11 @@ module.exports = function (RED) {
             }
         });
 
+        if (python_status){
+            this.status({fill: "red", shape: "ring", text: "missing python dependencies"});
+            node.verified = false;
+        }
+
         node.on('input', function (msg) {
             if (node.verified){
                 const obj = {cmd: "getTEMP", args: {bit: node.input, scale: node.scale}};
@@ -30,8 +35,10 @@ module.exports = function (RED) {
                     node.status({text: node.temp});
                     node.send({payload: node.temp});
                 });
-            }else{
+            }else if (!python_status){
                 node.log("invalid plate or input");
+            }else{
+                node.log("missing python dependencies");
             }
         });
 

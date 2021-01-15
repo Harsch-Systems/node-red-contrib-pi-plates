@@ -5,7 +5,7 @@ module.exports = function (RED) {
         this.relay = parseInt(config.relay, 10);
         this.state = "UNKNOWN";
         const verifier = {cmd: "VERIFY", args: {}};
-        this.plate.send(verifier, (reply) => {
+        let python_status = this.plate.send(verifier, (reply) => {
             var type = RED.nodes.getNode(config.config_plate).model;
             if (reply.state == 1 && (type == "RELAYplate" || type == "TINKERplate" && this.relay < 3)){
                 this.status({fill: "green", shape: "ring", text: "plate validated"});
@@ -15,6 +15,12 @@ module.exports = function (RED) {
                 this.verified = false;
             }
         });
+
+        if (python_status){
+            this.status({fill: "red", shape: "ring", text: "missing python dependencies"});
+            this.verified = false;
+        }
+
         var node = this;
         node.on('input', function (msg) {
             if (node.verified){
@@ -35,8 +41,10 @@ module.exports = function (RED) {
                         }
                         node.status({text: node.state});
                     });
-                }else{
+                }else if (!python_status){
                     node.log("invalid node input");
+                }else{
+                    node.log("missing python dependencies");
                 }
             }else{
                 node.log("invalid plate or input");

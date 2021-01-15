@@ -6,7 +6,7 @@ module.exports = function (RED) {
         node.channel = parseInt(config.channel, 10);
         node.temperature = 0;
         const verifier = {cmd: "VERIFY", args: {}};
-        this.plate.send(verifier, (reply) => {
+        let python_status = this.plate.send(verifier, (reply) => {
             var type = RED.nodes.getNode(config.config_plate).model;
             if (reply.state == 1 && type == "THERMOplate"){
                 node.status({fill: "green", shape: "ring", text: "plate validated"});
@@ -16,6 +16,12 @@ module.exports = function (RED) {
                 node.verified = false;
             }
         });
+
+        if (python_status){
+            node.status({fill: "red", shape: "ring", text: "missing python dependencies"});
+            node.verified = false;
+        }
+
         node.on('input', function (msg) {
             if(node.verified){
                 const cmd = node.channel==0 ? 'getCOLD' : 'getTEMP';
@@ -25,8 +31,10 @@ module.exports = function (RED) {
                     node.status({text: node.temperature});
                     node.send({payload: node.temperature});
                 });
-            }else{
+            }else if (!python_status){
                 node.log("invalid plate or input");
+            }else{
+                node.log("missing python dependencies");
             }
         });
 

@@ -5,7 +5,7 @@ module.exports = function (RED) {
         this.channel = parseInt(config.channel, 10);
         this.voltage = 0;
         const verifier = {cmd: "VERIFY", args: {}};
-        this.plate.send(verifier, (reply) => {
+        let python_status = this.plate.send(verifier, (reply) => {
             var type = RED.nodes.getNode(config.config_plate).model;
             if (reply.state == 1 && (type == "DAQCplate" && this.channel < 2 || type == "DAQC2plate")){
                 this.status({fill: "green", shape: "ring", text: "plate validated"});
@@ -15,6 +15,12 @@ module.exports = function (RED) {
                 this.verified = false;
             }
         });
+
+        if (python_status){
+            this.status({fill: "red", shape: "ring", text: "missing python dependencies"});
+            this.verified = false;
+        }
+
         var node = this;
         node.on('input', function (msg) {
             if(node.verified){
@@ -30,8 +36,10 @@ module.exports = function (RED) {
                 } else {
                     node.log("invalid DAC value: ignoring");
                 }
-            }else{
+            }else if (!python_status){
                 node.log("invalid plate or input");
+            }else{
+                node.log("missing python dependencies");
             }
         });
 
