@@ -4,50 +4,41 @@ module.exports = function (RED) {
         this.plate = RED.nodes.getNode(config.config_plate).plate;
         this.relay = parseInt(config.relay, 10);
         this.state = "UNKNOWN";
-        const verifier = {cmd: "VERIFY", args: {}};
-        let python_status = this.plate.send(verifier, (reply) => {
-            var type = RED.nodes.getNode(config.config_plate).model;
-            if (reply.state == 1 && (type == "RELAYplate" || type == "TINKERplate" && this.relay < 3)){
-                this.status({fill: "green", shape: "ring", text: "plate validated"});
-                this.verified = true;
-            }else{
-                this.status({fill: "red", shape: "ring", text: "invalid plate or input"});
-                this.verified = false;
-            }
-        });
-
-        if (python_status){
-            this.status({fill: "red", shape: "ring", text: "missing python dependencies"});
-            this.verified = false;
-        }
 
         var node = this;
         node.on('input', function (msg) {
-            if (node.verified){
-                var validInputs = ["on", "off", "toggle"];
-                if (typeof msg.payload === 'string' && validInputs.includes(msg.payload)){
-                    const obj = {args: {relay: node.relay}};
-                    if (msg.payload == "on") {
-                        obj['cmd'] = "relayON";
-                    } else if (msg.payload == "off") {
-                        obj['cmd'] = "relayOFF";
-                    } else if (msg.payload == "toggle") {
-                        obj['cmd'] = "relayTOGGLE";
-                    }
-                    node.plate.send(obj, (reply) => {
-                        if (reply.state != node.state) {
-                            node.state = reply.state
-                            node.send({payload: node.state});
-                        }
-                        node.status({text: node.state});
-                    });
-                }else if (!python_status){
-                    node.log("invalid node input");
-                }else{
-                    node.log("missing python dependencies");
+            let type = RED.nodes.getNode(config.config_plate).model;
+            let relayValid = (type == "RELAYplate" || type == "TINKERplate" && node.relay < 3);
+
+            let validInputs = ["on", "off", "toggle"];
+            let inputValid = (typeof msg.payload === 'string' && validInputs.includes(msg.payload));
+
+            if (!node.plate.plate_status && relayValid && inputValid){
+                const obj = {args: {relay: node.relay}};
+                if (msg.payload == "on") {
+                    obj['cmd'] = "relayON";
+                } else if (msg.payload == "off") {
+                    obj['cmd'] = "relayOFF";
+                } else if (msg.payload == "toggle") {
+                    obj['cmd'] = "relayTOGGLE";
                 }
-            }else{
-                node.log("invalid plate or input");
+                node.plate.send(obj, (reply) => {
+                    if (reply.state != node.state) {
+                        node.state = reply.state
+                        node.send({payload: node.state});
+                    }
+                    node.status({text: node.state});
+                });
+            }else if (node.plate.plate_status == 1) {
+                node.status({fill: "red", shape: "ring", text: "invalid plate"});
+                node.log("invalid plate");
+            }else if (node.plate.plate_status == 2) {
+                node.log("python process error");
+            }else if (!relayValid) {
+                node.status({fill: "red", shape: "ring", text: "invalid relay"});
+                node.log("invalid relay");
+            }else if (!inputValid) {
+                node.log("invalid input");
             }
         });
     }

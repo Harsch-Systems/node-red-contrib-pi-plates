@@ -1,29 +1,16 @@
 module.exports = function (RED) {
     function THERMONode(config) {
         RED.nodes.createNode(this, config);
+        this.plate = RED.nodes.getNode(config.config_plate).plate;
+        this.channel = parseInt(config.channel, 10);
+        this.temperature = 0;
+
         var node = this;
-        node.plate = RED.nodes.getNode(config.config_plate).plate;
-        node.channel = parseInt(config.channel, 10);
-        node.temperature = 0;
-        const verifier = {cmd: "VERIFY", args: {}};
-        let python_status = this.plate.send(verifier, (reply) => {
-            var type = RED.nodes.getNode(config.config_plate).model;
-            if (reply.state == 1 && type == "THERMOplate"){
-                node.status({fill: "green", shape: "ring", text: "plate validated"});
-                node.verified = true;
-            }else{
-                node.status({fill: "red", shape: "ring", text: "invalid plate or input"});
-                node.verified = false;
-            }
-        });
-
-        if (python_status){
-            node.status({fill: "red", shape: "ring", text: "missing python dependencies"});
-            node.verified = false;
-        }
-
         node.on('input', function (msg) {
-            if(node.verified){
+            let type = RED.nodes.getNode(config.config_plate).model;
+            let channelValid = (type == "THERMOplate");
+
+            if (!node.plate.plate_status && channelValid) {
                 const cmd = node.channel==0 ? 'getCOLD' : 'getTEMP';
                 const obj = {cmd: cmd, args: {channel: node.channel}};
                 node.plate.send(obj, (reply) => {
@@ -31,10 +18,14 @@ module.exports = function (RED) {
                     node.status({text: node.temperature});
                     node.send({payload: node.temperature});
                 });
-            }else if (!python_status){
-                node.log("invalid plate or input");
-            }else{
-                node.log("missing python dependencies");
+            }else if (node.plate.plate_status == 1) {
+                node.status({fill: "red", shape: "ring", text: "invalid plate"});
+                node.log("invalid plate");
+            }else if (node.plate.plate_status == 2) {
+                node.log("python process error");
+            }else if (!channelValid){
+                node.status({fill: "red", shape: "ring", text: "invalid plate type"});
+                node.log("invalid plate type");
             }
         });
 

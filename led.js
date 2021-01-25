@@ -2,50 +2,39 @@ module.exports = function (RED) {
     function LEDNode(config) {
         RED.nodes.createNode(this, config);
         this.plate = RED.nodes.getNode(config.config_plate).plate;
-        const verifier = {cmd: "VERIFY", args: {}};
-        let python_status = this.plate.send(verifier, (reply) => {
-            var type = RED.nodes.getNode(config.config_plate).model;
-            if (reply.state == 1 && type != "TINKERplate"){
-                this.status({fill: "green", shape: "ring", text: "plate validated"});
-                this.verified = true;
-            }else{
-                this.status({fill: "red", shape: "ring", text: "invalid plate or input"});
-                this.verified = false;
-            }
-        });
-
-        if (python_status){
-            this.status({fill: "red", shape: "ring", text: "missing python dependencies"});
-            this.verified = false;
-        }
 
         var node = this;
         node.on('input', function (msg) {
-            if(node.verified){
-                if(typeof msg.payload == "string"){
-                    const obj = {
-                        cmd: 'setLED',
-                        args: { color: msg.payload }
-                    };
+            let type = RED.nodes.getNode(config.config_plate).model;
+            let channelValid = (type != "TINKERplate");
+            let inputValid = (typeof msg.payload === 'string');
 
-                    const pt = node.plate.plate_type;
-                    if (pt == 'THERMO' || pt == 'RELAY') {
-                        obj['cmd'] = (msg.payload == 'off' ? "clrLED" : "setLED");
-                    }
+            if(!node.plate.plate_status && channelValid && inputValid) {
+                const obj = {
+                    cmd: 'setLED',
+                    args: { color: msg.payload }
+                };
 
-                    node.plate.send(obj, (reply) => {
-                        node.state = reply.state
-                        node.status({ text: node.state });
-                        node.send({ payload: node.state });
-                    });
-
-                }else{
-                    node.log("invalid input type");
+                const pt = node.plate.plate_type;
+                if (pt == 'THERMO' || pt == 'RELAY') {
+                    obj['cmd'] = (msg.payload == 'off' ? "clrLED" : "setLED");
                 }
-            }else if (!python_status){
-                node.log("invalid plate or input");
-            }else{
-                node.log("missing python dependencies");
+
+                node.plate.send(obj, (reply) => {
+                    node.state = reply.state
+                    node.status({ text: node.state });
+                    node.send({ payload: node.state });
+                });
+            }else if (node.plate.plate_status == 1) {
+                node.status({fill: "red", shape: "ring", text: "invalid plate"});
+                node.log("invalid plate");
+            }else if (node.plate.plate_status == 2) {
+                node.log("python process error");
+            }else if (!channelValid) {
+                node.status({fill: "red", shape: "ring", text: "invalid plate type"});
+                node.log("invalid plate type");
+            }else if (!inputValid) {
+                node.log("invalid input type");
             }
         });
 
