@@ -9,7 +9,7 @@ module.exports = function (RED) {
             let channelValid = (type != "TINKERplate");
             let inputValid = (typeof msg.payload === 'string');
 
-            if(!node.plate.plate_status && channelValid && inputValid) {
+            if (!node.plate.plate_status && channelValid && inputValid) {
                 const obj = {
                     cmd: 'setLED',
                     args: { color: msg.payload }
@@ -28,6 +28,8 @@ module.exports = function (RED) {
             }else if (node.plate.plate_status == 1) {
                 node.status({fill: "red", shape: "ring", text: "invalid plate"});
                 node.log("invalid plate");
+
+                node.plate.update_status();
             }else if (node.plate.plate_status == 2) {
                 node.log("python process error");
             }else if (!channelValid) {
