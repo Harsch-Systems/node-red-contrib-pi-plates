@@ -1,37 +1,38 @@
 module.exports = function (RED) {
     function TEMPNode(config) {
         RED.nodes.createNode(this, config);
-        var node = this;
-        node.plate = RED.nodes.getNode(config.config_plate).plate;
-        node.input = parseInt(config.input, 10);
-        node.scale = config.scale;
-        node.temp = 0;
-        const verifier = {cmd: "VERIFY", args: {}};
-        node.plate.send(verifier, (reply) => {
-            var type = RED.nodes.getNode(config.config_plate).model;
-            if (reply.state == 1 && (type == "DAQCplate" && node.input < 8 || type == "TINKERplate" && node.input > 0)){
-                this.status({fill: "green", shape: "ring", text: "plate validated"});
-                if (type == "TINKERplate"){
-                    const conf = {cmd: "setIN", args: {bit: node.input}};
-                    node.plate.send(conf, (reply) => {});
-                }
-                node.verified = true;
-            }else{
-                this.status({fill: "red", shape: "ring", text: "invalid plate or input"});
-                node.verified = false;
-            }
-        });
+        this.plate = RED.nodes.getNode(config.config_plate).plate;
+        this.input = parseInt(config.input, 10);
+        this.scale = config.scale;
+        this.temp = 0;
 
+        if (RED.nodes.getNode(config.config_plate).model == "TINKERplate"){
+            const conf = {cmd: "setIN", args: {bit: node.input}};
+            node.plate.send(conf, (reply) => {});
+        }
+
+        var node = this;
         node.on('input', function (msg) {
-            if (node.verified){
+            let type = RED.nodes.getNode(config.config_plate).model;
+            let channelValid = (type == "DAQCplate" && node.input < 8 || type == "TINKERplate" && node.input > 0);
+
+            if (!node.plate.plate_status && channelValid) {
                 const obj = {cmd: "getTEMP", args: {bit: node.input, scale: node.scale}};
                 node.plate.send(obj, (reply) => {
                     node.temp = reply.temp;
                     node.status({text: node.temp});
                     node.send({payload: node.temp});
                 });
-            }else{
-                node.log("invalid plate or input");
+            }else if (node.plate.plate_status == 1) {
+                node.status({fill: "red", shape: "ring", text: "invalid plate"});
+                node.log("invalid plate");
+
+                node.plate.update_status();
+            }else if (node.plate.plate_status == 2) {
+                node.log("python process error");
+            }else if (!channelValid) {
+                node.status({fill: "red", shape: "ring", text: "invalid channel"});
+                node.log("invalid channel");
             }
         });
 
