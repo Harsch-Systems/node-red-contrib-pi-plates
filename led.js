@@ -31,12 +31,17 @@ module.exports = function (RED) {
 
                 node.plate.update_status();
             }else if (node.plate.plate_status == 2) {
+                node.status({fill: "red", shape: "ring", text: "missing python dependencies"});
+                node.log("missing python dependencies");
+            }else if (node.plate.plate_status == 3) {
+                node.status({fill: "red", shape: "ring", text: "python process error"});
                 node.log("python process error");
             }else if (!channelValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid plate type"});
                 node.log("invalid plate type");
             }else if (!inputValid) {
-                node.log("invalid input type");
+                node.status({fill: "red", shape: "ring", text: "invalid input"});
+                node.log("invalid input");
             }
         });
 
