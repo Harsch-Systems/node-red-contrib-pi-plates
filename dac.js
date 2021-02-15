@@ -15,7 +15,7 @@ module.exports = function (RED) {
                 const obj = {cmd: "setDAC", args: {channel: node.channel, value: msg.payload}};
                 node.plate.send(obj, (reply) => {
                     node.value = reply.value;
-                    //node.status({text: node.value});
+                    node.status({text: node.value});
                     node.send({payload: node.value});
                 });
             }else if (node.plate.plate_status == 1) {
@@ -24,11 +24,16 @@ module.exports = function (RED) {
 
                 node.plate.update_status();
             }else if (node.plate.plate_status == 2) {
+                node.status({fill: "red", shape: "ring", text: "missing python dependencies"});
+                node.log("missing python dependencies");
+            }else if (node.plate.plate_status == 3) {
+                node.status({fill: "red", shape: "ring", text: "python process error"});
                 node.log("python process error");
             }else if (!channelValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid channel"});
                 node.log("invalid channel");
             }else if (!inputValid) {
+                node.status({fill: "red", shape: "ring", text: "invalid DAC value: ignoring"});
                 node.log("invalid DAC value: ignoring");
             }
         });
