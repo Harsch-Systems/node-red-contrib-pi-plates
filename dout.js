@@ -12,7 +12,9 @@ module.exports = function (RED) {
         var node = this;
         node.on('input', function (msg) {
             let type = RED.nodes.getNode(config.config_plate).model;
-            let channelValid = (type == "DAQCplate" || type == "DAQC2plate") && node.output < 7 || type == "TINKERplate" && node.output > 0;
+            let channelValid = type == "DAQCplate" && node.output < 7 ||
+			type == "DAQC2plate" && node.output < 8 ||
+			type == "TINKERplate" && node.output > 0;
 
             let validInputs = ["on", "off", "toggle"];
             let inputValid = (typeof msg.payload === 'string' && validInputs.includes(msg.payload));
