@@ -8,7 +8,9 @@ module.exports = function (RED) {
         var node = this;
         node.on('input', function (msg) {
             let type = RED.nodes.getNode(config.config_plate).model;
-            let channelValid = (type == "DAQCplate" || type == "DAQC2plate" || type == "TINKERplate" && node.channel > 0 && node.channel < 5);
+            let channelValid = (((type == "DAQCplate" || type == "DAQC2plate" && node.channel < 9 ) || (type == "TINKERplate" && node.channel < 5)) 
+                && node.channel > 0
+            );
 
             if (!node.plate.plate_status && channelValid) {
                 const obj = {cmd: "getADC", args: {channel: node.channel}};
