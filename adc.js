@@ -10,8 +10,8 @@ module.exports = function (RED) {
             let type = RED.nodes.getNode(config.config_plate).model;
             /* Valid DAQC/DAQC2 channels are 0 through 8.  Valid TINKER channels are 1 through 4 */
             let channelValid =
-                ((type == "DAQCplate" || type == "DAQC2plate") && 0 <= node.channel < 9) ||
-                (type == "TINKERplate" && 1 <= node.channel < 5); 
+                ((type == "DAQCplate" || type == "DAQC2plate") && (0 <= node.channel && node.channel < 9)) ||
+                (type == "TINKERplate" && (1 <= node.channel && node.channel < 5)); 
 
             if (!node.plate.plate_status && channelValid) {
                 const obj = {cmd: "getADC", args: {channel: node.channel}};
