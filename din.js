@@ -5,12 +5,13 @@ module.exports = function (RED) {
         this.input = parseInt(config.input, 10);
         this.state = 0;
 
+        var node = this;
+
         if (RED.nodes.getNode(config.config_plate).model  == "TINKERplate"){
             const conf = {cmd: "setIN", args: {bit: node.input}};
             node.plate.send(conf, (reply) => {});
         }
 
-        var node = this;
         node.on('input', function (msg) {
             let type = RED.nodes.getNode(config.config_plate).model;
             let channelValid = ((type == "DAQCplate" || type == "DAQC2plate") && node.input < 8) || type == "TINKERplate" && node.input > 0;
