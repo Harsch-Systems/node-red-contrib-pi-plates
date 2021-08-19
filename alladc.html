@@ -1,0 +1,31 @@
+<script type="text/javascript">
+    RED.nodes.registerType('ppAllADC', {
+        category: 'Pi_Plates',
+        color: '#a6bbcf',
+        defaults: {
+            config_plate: { value: '', type: "pi_plate"},
+            name: { value: ''}
+        },
+        inputs: 1,
+        outputs: 8,
+        icon: 'file.png',
+        label: function () {
+            return (this.name || 'ADC');
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="ppAllADC">
+    <div class="form-row">
+        <label for="node-input-config_plate"><i class="icon-tag"></i> Plate</label>
+        <input type="text" id="node-input-config_plate">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="ppADC">
+    <p>retrieve all ADC input channels at once. DAQC/DAQC2 have 8, TINKER has 4</p>
+</script>
