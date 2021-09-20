@@ -1,7 +1,7 @@
 <script type="text/javascript">
     RED.nodes.registerType('ppDIN', {
         category: 'Pi_Plates',
-        color: '#a6bbcf',
+        color: '#87A980',
         defaults: {
             config_plate: { value: '', type: "pi_plate"},
             name: { value: ''},
@@ -9,7 +9,8 @@
         },
         inputs: 1,
         outputs: 1,
-        icon: 'file.png',
+        icon: 'serial.svg',
+	paletteLabel: 'DIN',
         label: function () {
             return (this.name || 'DIN' + this.input);
         }
