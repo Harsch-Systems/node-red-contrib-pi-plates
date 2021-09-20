@@ -1,7 +1,7 @@
 <script type="text/javascript">
     RED.nodes.registerType('ppDOUT', {
         category: 'Pi_Plates',
-        color: '#a6bbcf',
+        color: '#87A980',
         defaults: {
             config_plate: { value: '', type: "pi_plate"},
             name: { value: ''},
@@ -9,7 +9,9 @@
         },
         inputs: 1,
         outputs: 1,
-        icon: 'file.png',
+	align:'right',
+        icon: 'serial.svg',
+	paletteLabel: 'DOUT',
         label: function () {
             return (this.name || 'DOUT' + this.output);
         }
