@@ -5,8 +5,9 @@ A <a href="http://nodered.org" target="_new">Node-RED</a> node that enables
 communication with <a href="https://pi-plates.com">Pi-Plates</a> boards.
 
  - RELAYplate
+ - RELAYplate2
  - DAQCplate
- - MOTORplate
+ - DAQC2plate
  - TINKERplate
 
 Install
