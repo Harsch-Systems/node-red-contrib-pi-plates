@@ -21,7 +21,8 @@
       "ppFREQ": "freq.js",
       "ppLED": "led.js",
       "ppTEMP": "temp.js",
-      "ppTHERMO": "thermo.js"
+      "ppTHERMO": "thermo.js",
+      "ppPWM": "pwm.js"
     }
   },
   "dependencies": {
