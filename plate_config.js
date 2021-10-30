@@ -26,9 +26,9 @@ module.exports = function (RED) {
             case "THERMOplate":
                 this.plate = new THERMOplate(addr);
                 break;
-	    case "TINKERplate":
-		this.plate = new TINKERplate(addr);
-		break;
+            case "TINKERplate":
+                this.plate = new TINKERplate(addr);
+                break;
             default:
                 this.error('incorrect plate specifier');
                 break;
