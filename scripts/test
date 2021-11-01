@@ -1,3 +1,0 @@
-#!/bin/bash
-jshint -c .jshintrc *.js
-jscs -c .jscsrc *.js
