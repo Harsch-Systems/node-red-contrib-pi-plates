@@ -8,7 +8,7 @@ module.exports = function (RED) {
         var node = this;
         node.on('input', function (msg) {
             let type = RED.nodes.getNode(config.config_plate).model;
-            let relayValid = (type == "RELAYplate" || type == "TINKERplate" && node.relay < 3);
+            let relayValid = (type == "RELAYplate2" || type == "RELAYplate" && node.relay < 8 || type == "TINKERplate" && node.relay < 3);
 
             let validInputs = ["on", "off", "toggle"];
             let inputValid = (typeof msg.payload === 'string' && validInputs.includes(msg.payload));
