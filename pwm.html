@@ -1,0 +1,46 @@
+<script type="text/javascript">
+    RED.nodes.registerType('ppPWM', {
+        category: 'Pi_Plates',
+        color: '#87A980',
+        defaults: {
+            config_plate: { value: '', type: "pi_plate"},
+            name: { value: ''},
+            channel: { value: "0", required: true}
+        },
+        inputs: 1,
+        outputs: 1,
+        align: 'right',
+        icon: 'serial.svg',
+        paletteLabel: 'PWM',
+        label: function () {
+            return (this.name || 'PWM' + this.channel);
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="ppPWM">
+    <div class="form-row">
+        <label for="node-input-config_plate"><i class="icon-tag"></i> Plate</label>
+        <input type="text" id="node-input-config_plate">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-channel"><i class="icon-tag"></i> Channel #</label>
+        <select id="node-input-channel">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>  
+            <option value="6">6</option>             
+        </select>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="ppPWM">
+    <p>PWMs accept a numeric value from 0 to 100% and set the PWM output to that duty cycle</p>
+</script>
