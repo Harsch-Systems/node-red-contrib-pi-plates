@@ -8,13 +8,13 @@ module.exports = function (RED) {
         var node = this;
         node.on('input', function (msg) {
             let type = RED.nodes.getNode(config.config_plate).model;
-/*
+            /*
             let validInputs = ["start", "stop", "speed"];
             let inputValid = (typeof msg.payload === 'string' && validInputs.includes(msg.payload) ||
                 typeof msg.payload === 'object');
-*/
-//            if (!node.plate.plate_status && relayValid && inputValid){
-            if (true){
+            */
+            //  if (!node.plate.plate_status && relayValid && inputValid){
+            if (true) {
                 const obj = {args: {motor: node.motor}};
                 if (msg.payload == "start") {
                     obj['cmd'] = "dcSTART";
@@ -31,28 +31,28 @@ module.exports = function (RED) {
                     node.log("malformed obj, missing 'cmd'");
                 }
 
-/*
+                /*
                     if (reply.state != node.state) {
                         node.state = reply.state
                         node.send({payload: node.state});
                     }
                     node.status({text: node.state});
-*/
-            }else if (node.plate.plate_status == 1) {
+            */
+            } else if (node.plate.plate_status == 1) {
                 node.status({fill: "red", shape: "ring", text: "invalid plate"});
                 node.log("invalid plate");
 
                 node.plate.update_status();
-            }else if (node.plate.plate_status == 2) {
+            } else if (node.plate.plate_status == 2) {
                 node.status({fill: "red", shape: "ring", text: "missing python dependencies"});
                 node.log("missing python dependencies");
-            }else if (node.plate.plate_status == 3) {
+            } else if (node.plate.plate_status == 3) {
                 node.status({fill: "red", shape: "ring", text: "python process error"});
                 node.log("python process error");
-            }else if (!relayValid) {
+            } else if (!relayValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid relay"});
                 node.log("invalid relay");
-            }else if (!inputValid) {
+            } else if (!inputValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid input"});
                 node.log("invalid input");
             }

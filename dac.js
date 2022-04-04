@@ -11,7 +11,7 @@ module.exports = function (RED) {
             let channelValid = (type == "DAQCplate" && node.channel < 2 || type == "DAQC2plate");
             let inputValid = (typeof msg.payload === 'number' && msg.payload >= 0 && msg.payload <= 4.095);
 
-            if(!node.plate.plate_status && inputValid && channelValid){
+            if (!node.plate.plate_status && inputValid && channelValid) {
                 const obj = {cmd: "setDAC", args: {channel: node.channel, value: msg.payload}};
                 node.plate.send(obj, (reply) => {
                     node.value = reply.value;

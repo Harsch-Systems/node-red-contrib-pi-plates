@@ -3,7 +3,8 @@
   "version": "0.1.7",
   "description": "control Pi-Plates boards from Node-RED",
   "scripts": {
-    "test": "scripts/test"
+    "test": "scripts/test",
+    "jscs": "jscs -c .jscsrc -m 1 *.js"
   },
   "repository": {
     "type": "git",

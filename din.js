@@ -7,7 +7,7 @@ module.exports = function (RED) {
 
         var node = this;
 
-        if (RED.nodes.getNode(config.config_plate).model  == "TINKERplate"){
+        if (RED.nodes.getNode(config.config_plate).model == "TINKERplate") {
             const conf = {cmd: "setIN", args: {bit: node.input}};
             node.plate.send(conf, (reply) => {});
         }
@@ -23,18 +23,18 @@ module.exports = function (RED) {
                     node.status({text: node.state});
                     node.send({payload: node.state});
                 });
-            }else if (node.plate.plate_status == 1) {
+            } else if (node.plate.plate_status == 1) {
                 node.status({fill: "red", shape: "ring", text: "invalid plate"});
                 node.log("invalid plate");
 
                 node.plate.update_status();
-            }else if (node.plate.plate_status == 2) {
+            } else if (node.plate.plate_status == 2) {
                 node.status({fill: "red", shape: "ring", text: "missing python dependencies"});
                 node.log("missing python dependencies");
-            }else if (node.plate.plate_status == 3) {
+            } else if (node.plate.plate_status == 3) {
                 node.status({fill: "red", shape: "ring", text: "python process error"});
                 node.log("python process error");
-            }else if (!channelValid) {
+            } else if (!channelValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid channel"});
                 node.log("invalid channel");
             }

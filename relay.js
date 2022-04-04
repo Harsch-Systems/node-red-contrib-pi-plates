@@ -13,7 +13,7 @@ module.exports = function (RED) {
             let validInputs = ["on", "off", "toggle"];
             let inputValid = (typeof msg.payload === 'string' && validInputs.includes(msg.payload));
 
-            if (!node.plate.plate_status && relayValid && inputValid){
+            if (!node.plate.plate_status && relayValid && inputValid) {
                 const obj = {args: {relay: node.relay}};
                 if (msg.payload == "on") {
                     obj['cmd'] = "relayON";
@@ -29,21 +29,21 @@ module.exports = function (RED) {
                     }
                     node.status({text: node.state});
                 });
-            }else if (node.plate.plate_status == 1) {
+            } else if (node.plate.plate_status == 1) {
                 node.status({fill: "red", shape: "ring", text: "invalid plate"});
                 node.log("invalid plate");
 
                 node.plate.update_status();
-            }else if (node.plate.plate_status == 2) {
+            } else if (node.plate.plate_status == 2) {
                 node.status({fill: "red", shape: "ring", text: "missing python dependencies"});
                 node.log("missing python dependencies");
-            }else if (node.plate.plate_status == 3) {
+            } else if (node.plate.plate_status == 3) {
                 node.status({fill: "red", shape: "ring", text: "python process error"});
                 node.log("python process error");
-            }else if (!relayValid) {
+            } else if (!relayValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid relay"});
                 node.log("invalid relay");
-            }else if (!inputValid) {
+            } else if (!inputValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid input"});
                 node.log("invalid input");
             }

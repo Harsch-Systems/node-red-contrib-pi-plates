@@ -7,13 +7,14 @@ module.exports = function (RED) {
         var node = this;
         node.on('input', function (msg) {
             let type = RED.nodes.getNode(config.config_plate).model;
-            /* DAQC/DAQC2 have 8 ADC inputs, TINKER has 4 */ 
+            /* DAQC/DAQC2 have 8 ADC inputs, TINKER has 4 */
 
             if (!node.plate.plate_status) {
                 const obj = {cmd: "getADCall", args: {}};
                 node.plate.send(obj, (reply) => {
-                    for (let i = 0; i < reply.voltages.length; i++)
+                    for (let i = 0; i < reply.voltages.length; i++) {
                         node.outputs[i] = { payload: reply.voltages[i] };
+                    }
 
                     node.status({text: reply.voltages});
                     node.send(node.outputs);
