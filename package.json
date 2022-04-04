@@ -22,11 +22,12 @@
       "ppLED": "led.js",
       "ppTEMP": "temp.js",
       "ppTHERMO": "thermo.js",
-      "ppPWM": "pwm.js"
+      "ppPWM": "pwm.js",
+      "ppMOTOR": "motor.js"
     }
   },
   "dependencies": {
-    "pi-plates": ">=0.1.5"
+    "pi-plates": ">=0.1.7"
   },
   "keywords": [
     "node-red",

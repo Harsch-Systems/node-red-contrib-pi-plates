@@ -1,0 +1,45 @@
+<script type="text/javascript">
+    RED.nodes.registerType('ppMotor', {
+        category: 'Pi_Plates',
+        color: '#87A980',
+        defaults: {
+            config_plate: { value: '', type: "pi_plate"},
+            name: { value: ''},
+            motor: { value: "1", required: true}
+        },
+        inputs: 1,
+        outputs: 0,
+        align:'right',
+        icon: 'motor.svg',
+        paletteLabel: 'MOTOR',
+        label: function () {
+            return (this.name || 'MOTOR' + this.motor);
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="ppMotor">
+    <div class="form-row">
+        <label for="node-input-config_plate"><i class="icon-tag"></i> Plate</label>
+        <input type="text" id="node-input-config_plate">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-motor"><i class="icon-tag"></i> Motor #</label>
+        <select id="node-input-motor">
+            <option value="1">DC 1</option>
+            <option value="2">DC 2</option>
+            <option value="3">DC 3</option>
+            <option value="4">DC 4</option>
+        </select>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="ppMotor">
+    <p>Send "start" to this node to start the motor.</p>
+    <p>Send "stop" to this node to stop.</p>
+    <p>Send an object with property 'speed' and a value between 0.0 and 100.0 to set the motor speed</p>
+</script>
