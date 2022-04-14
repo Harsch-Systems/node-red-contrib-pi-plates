@@ -1,4 +1,4 @@
-const { RELAYplate, RELAYplate2, DAQCplate, DAQC2plate, MOTORplate, THERMOplate, TINKERplate, DIGIplate } = require('pi-plates');
+const { RELAYplate, RELAYplate2, DAQCplate, DAQC2plate, MOTORplate, THERMOplate, TINKERplate, DIGIplate, ADCplate } = require('pi-plates');
 
 module.exports = function (RED) {
     function PlateNode(config) {
@@ -38,6 +38,10 @@ module.exports = function (RED) {
             }
             case "DIGIplate": {
                 this.plate = new DIGIplate(addr);
+                break;
+            }
+            case "ADCplate": {
+                this.plate = new ADCplate(addr);
                 break;
             }
             default: {

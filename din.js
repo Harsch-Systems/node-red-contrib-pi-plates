@@ -25,6 +25,10 @@ module.exports = function (RED) {
                 if (node.input >= 1 && node.input <= 8) {
                     channelValid = true;
                 }
+            } else if (type == "ADCplate") {
+                if (node.input >= 0 && node.input <= 3) {
+                    channelValid = true;
+                }
             }
 
             if (!node.plate.plate_status && channelValid) {
