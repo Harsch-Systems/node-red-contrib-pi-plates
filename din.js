@@ -14,7 +14,18 @@ module.exports = function (RED) {
 
         node.on('input', function (msg) {
             let type = RED.nodes.getNode(config.config_plate).model;
-            let channelValid = ((type == "DAQCplate" || type == "DAQC2plate") && node.input < 8) || type == "TINKERplate" && node.input > 0;
+            let channelValid = false;
+            if (type == "DAQCplate" || type == "DAQC2plate") {
+                // valid values are 0-7
+                if (node.input >= 0 && node.input <= 7) {
+                    channelValid = true;
+                }
+            } else if (type == "TINKERplate" || type == "DIGIplate") {
+                // valid values are 1-8
+                if (node.input >= 1 && node.input <= 8) {
+                    channelValid = true;
+                }
+            }
 
             if (!node.plate.plate_status && channelValid) {
                 const obj = {cmd: "getDINbit", args: {bit: node.input}};
