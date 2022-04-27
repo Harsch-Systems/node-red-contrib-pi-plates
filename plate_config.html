@@ -1,17 +1,3 @@
-<script type="text/javascript">
-    RED.nodes.registerType('pi_plate', {
-        category: 'config',
-        defaults: {
-            model: { value: '', requried: true},
-            address: { value: '0', required: true}
-        },
-        label: function () {
-            return (this.model + ":" + this.address);
-        }
-
-    });
-</script>
-
 <script type="text/x-red" data-template-name="pi_plate">
     <div class="form-row">
         <label for="node-config-input-model"><i class="icon-tag"></i> Plate Model</label>
@@ -25,6 +11,7 @@
 	    <option value="TINKERplate">TINKERplate</option>
 	    <option value="DIGIplate">DIGIplate</option>
 	    <option value="ADCplate">ADCplate</option>
+	    <option value="CURRENTplate">CURRENTplate</option>
         </select>
     </div>
     <div class="form-row">
@@ -38,11 +25,38 @@
             <option value="5">5</option>
             <option value="6">6</option>
             <option value="7">7</option>
-            <option value="8">8</option>
         </select>
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-toggle"><i class="icon-tag"></i>LED Toggle</label>
+        <button id="node-config-input-toggle" type="button" class="red-ui-button">Button</button>
     </div>
 </script>
 
 <script type="text/x-red" data-help-name="pi_plate">
     <p>help text for pi-plates config node</p>
 </script>
+
+<script type="text/javascript">
+(function() {
+    RED.nodes.registerType('pi_plate', {
+        category: 'config',
+        defaults: {
+            model: { value: '', requried: true},
+            address: { value: '0', required: true}
+        },
+        label: function () {
+            return (this.model + ":" + this.address);
+        },
+        oneditprepare: function() {
+            $("#node-config-input-toggle").on("click", function(evt) {
+                // the button has been clicked
+                console.log('bar');
+                var plate = RED.nodes.getNode(config.plate)
+                plate.toggleLED();
+            });
+        }
+    });
+})();
+</script>
+

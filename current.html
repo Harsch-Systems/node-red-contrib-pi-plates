@@ -1,0 +1,46 @@
+<script type="text/javascript">
+    RED.nodes.registerType('ppCURRENT', {
+        category: 'Pi_Plates',
+        color: '#87A980',
+        defaults: {
+            config_plate: { value: '', type: "pi_plate"},
+            name: { value: ''},
+            channel: { value: "1", required: true}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-tachometer",
+        paletteLabel: '4-20mA Input',
+        label: function () {
+            return (this.name || 'I' + this.channel);
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="ppCURRENT">
+    <div class="form-row">
+        <label for="node-input-config_plate"><i class="icon-tag"></i> Plate</label>
+        <input type="text" id="node-input-config_plate">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-channel"><i class="icon-tag"></i> Channel #</label>
+        <select id="node-input-channel">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+        </select>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="ppCURRENT">
+    <p>4-20mA input.  Value is current measurement in milliamps.</p>
+</script>

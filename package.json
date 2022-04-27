@@ -16,6 +16,7 @@
       "ppRelay": "relay.js",
       "ppADC": "adc.js",
       "ppADCall": "alladc.js",
+      "ppCURRENT": "current.js",
       "ppDAC": "dac.js",
       "ppDIN": "din.js",
       "ppDOUT": "dout.js",
