@@ -5,41 +5,60 @@ module.exports = function (RED) {
 
         var node = this;
         node.on('input', function (msg) {
-            let type = RED.nodes.getNode(config.config_plate).model;
-            let channelValid = (type != "TINKERplate");
-            let inputValid = (typeof msg.payload === 'string');
+            let colors = ['red', 'green', 'yellow', 'blue', 'magenta',
+                          'cyan', 'white'];
 
-            if (!node.plate.plate_status && channelValid && inputValid) {
-                const obj = {
-                    cmd: 'setLED',
-                    args: { color: msg.payload }
-                };
+            let commands = ['on', 'off', 'toggle'];
 
-                const pt = node.plate.plate_type;
-                if (pt == 'THERMO' || pt == 'RELAY') {
-                    obj['cmd'] = (msg.payload == 'off' ? "clrLED" : "setLED");
+            let inputValid = (typeof msg.payload === 'string' &&
+                              commands.includes(msg.payload) ||
+                              colors.includes(msg.payload));
+
+            if (!node.plate.plate_status && inputValid) {
+                const obj = { cmd: '', args: {} };
+
+                let colors = ['red', 'green', 'yellow', 'blue', 'magenta',
+                              'cyan', 'white'];
+                if (colors.includes(msg.payload)) {
+                    let color = msg.payload;
+                } else {
+                    let color = null;
                 }
 
-                node.plate.send(obj, (reply) => {
-                    node.state = reply.state
-                    node.status({ text: node.state });
-                    node.send({ payload: node.state });
-                });
-            }else if (node.plate.plate_status == 1) {
+                switch(msg.payload) {
+                    case 'on':
+                        obj.cmd = 'setLED';
+                    break;
+                    case 'off':
+                        obj.cmd = 'clrLED';
+                    break;
+                    case 'toggle':
+                        obj.cmd = 'toggleLED';
+                    break;
+                    default:
+                        if (color) {
+                            obj.cmd = 'setLED';
+                            obj.args.color = color;
+                        }
+                }
+                if (obj.cmd != '') {
+                    node.plate.send(obj, (reply) => {
+                        node.state = reply.state
+                        node.status({ text: node.state });
+                        node.send({ payload: node.state });
+                    });
+                }
+            } else if (node.plate.plate_status == 1) {
                 node.status({fill: "red", shape: "ring", text: "invalid plate"});
                 node.log("invalid plate");
-
                 node.plate.update_status();
-            }else if (node.plate.plate_status == 2) {
+            } else if (node.plate.plate_status == 2) {
                 node.status({fill: "red", shape: "ring", text: "missing python dependencies"});
                 node.log("missing python dependencies");
-            }else if (node.plate.plate_status == 3) {
+            } else if (node.plate.plate_status == 3) {
                 node.status({fill: "red", shape: "ring", text: "python process error"});
                 node.log("python process error");
-            }else if (!channelValid) {
-                node.status({fill: "red", shape: "ring", text: "invalid plate type"});
-                node.log("invalid plate type");
-            }else if (!inputValid) {
+            } else if (!inputValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid input"});
                 node.log("invalid input");
             }
