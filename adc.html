@@ -5,15 +5,121 @@
         defaults: {
             config_plate: { value: '', type: "pi_plate"},
             name: { value: ''},
-            channel: { value: "1", required: true}
+            adc_input_type: { value: null},
+            channel: { value: "not-set", required: true}
         },
         inputs: 1,
         outputs: 1,
         icon: 'analog.svg',
         paletteLabel: 'ADC',
         label: function () {
-            return (this.name || 'ADC' + this.channel);
-        }
+            return (this.name || 'ADC ' + this.channel);
+        },
+        oneditprepare: function() {
+            var node = this;
+            node.prev_config_id = $("#node-input-config_plate").val();
+            node.plate_model = 'unknown';
+
+            function draw_form() {
+                $("#channel_section").hide()
+                $("#node-input-channel").empty()
+                $("#adc_input_section").hide()
+                var config_id = $("#node-input-config_plate").val()
+                if (config_id == "_ADD_") {
+                    // no config node yet
+                } else {
+                    node.config_node = RED.nodes.node(config_id)
+                    node.plate_model = node.config_node.model;
+
+                    if (node.plate_model  == "DAQCplate" || node.plate_model == "DAQC2plate") {
+                        // valid inputs are 0 through 8, where 8 is special (+5v supply voltage)
+                        var daqc_options = [
+                            {name: "AIN0", value: 0},
+                            {name: "AIN1", value: 1},
+                            {name: "AIN2", value: 2},
+                            {name: "AIN3", value: 3},
+                            {name: "AIN4", value: 4},
+                            {name: "AIN5", value: 5},
+                            {name: "AIN6", value: 6},
+                            {name: "AIN7", value: 7},
+                            {name: "+5V Supply", value: 8}
+                        ]
+                        for (var i = 0; i < daqc_options.length; i++)
+                            $('#node-input-channel').append('<option value="' + daqc_options[i].value + '">' + daqc_options[i].name + '</option>');
+
+                    } else if (node.plate_model == "TINKERplate") {
+                        var tinker_options = [
+                            {name: "AIN1", value: 1},
+                            {name: "AIN2", value: 2},
+                            {name: "AIN3", value: 3},
+                            {name: "AIN4", value: 4}
+                        ]
+                        console.log('populating TINKER');
+                        for (var i = 0; i < tinker_options.length; i++)
+                            $('#node-input-channel').append('<option value="' + tinker_options[i].value + '">' + tinker_options[i].name + '</option>');
+
+                    } else if (node.plate_model == "ADCplate") {
+
+                        var single_options = [
+                            {name: "S0", value: "S0"},
+                            {name: "S1", value: "S1"},
+                            {name: "S2", value: "S2"},
+                            {name: "S3", value: "S3"},
+                            {name: "S4", value: "S4"},
+                            {name: "S5", value: "S5"},
+                            {name: "S6", value: "S6"},
+                            {name: "S7", value: "S7"}
+                        ]
+
+                        var diff_options = [
+                            {name: "D0", value: "D0"},
+                            {name: "D1", value: "D1"},
+                            {name: "D2", value: "D2"},
+                            {name: "D3", value: "D3"}
+                        ]
+
+                        if (node.adc_input_type) {
+                            $("#adc_input_section select").val(node.adc_input_type)
+                        }
+
+                        if (node.adc_input_type == "diff") {
+                            for (var i = 0; i < diff_options.length; i++)
+                                $('#node-input-channel').append('<option value="' + diff_options[i].value + '">' + diff_options[i].name + '</option>');
+                        } else {
+                            for (var i = 0; i < single_options.length; i++)
+                                $('#node-input-channel').append('<option value="' + single_options[i].value + '">' + single_options[i].name + '</option>');
+                        }
+
+                        $("#adc_input_section").show();
+                    }
+
+                    // search for current setting (if it exists) and select
+                    if (node.channel) {
+                        $("#channel_section select").val(node.channel)
+                    }
+                    $("#channel_section").show()
+                }
+            } //draw_form()
+
+            $("#node-input-config_plate").on('focus', function() {node.prev_config_id = this.value}).change(function() {
+                // if config node selection has changed, clear our form selection and redraw the form
+                if (node.prev_config_id !== this.value) {
+                    node.plate_model = null;
+                }
+                draw_form()
+            });
+
+            $("#node-input-adc_input_type").change(function () {
+                node.adc_input_type = $('#node-input-adc_input_type').val();
+                draw_form()
+            });
+
+            //$.getJSON('config_options', function(data) {
+            //    var response = data || [];
+            //});
+
+
+        } //oneditprepare()
     });
 </script>
 
@@ -26,18 +132,16 @@
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
-    <div class="form-row">
+    <div class="form-row" id="adc_input_section">
+        <label for="node-input-adc_input_type"><i class="icon-tag"></i> Input Type</label>
+        <select id="node-input-adc_input_type">
+        <option value="single">Single-Ended</option>
+        <option value="diff">Differential</option>
+        </select>
+    </div>
+    <div class="form-row" id="channel_section">
         <label for="node-input-channel"><i class="icon-tag"></i> Channel #</label>
         <select id="node-input-channel">
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">5V Power Supply</option>
         </select>
     </div>
 </script>

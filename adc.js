@@ -1,9 +1,11 @@
 module.exports = function (RED) {
     function ADCNode(config) {
         RED.nodes.createNode(this, config);
-        this.plate = RED.nodes.getNode(config.config_plate).plate;
-        this.channel = parseInt(config.channel, 10);
+        this.config_node = RED.nodes.getNode(config.config_plate);
+        this.plate = this.config_node.plate;
+        this.channel = config.channel;
         this.voltage = 0;
+        this.milliamps = 0;
 
         var node = this;
         node.on('input', function (msg) {
@@ -20,18 +22,18 @@ module.exports = function (RED) {
                     node.status({text: node.voltage});
                     node.send({payload: node.voltage});
                 });
-            }else if (node.plate.plate_status == 1) {
+            } else if (node.plate.plate_status == 1) {
                 node.status({fill: "red", shape: "ring", text: "invalid plate"});
                 node.log("invalid plate");
 
                 node.plate.update_status();
-            }else if (node.plate.plate_status == 2) {
+            } else if (node.plate.plate_status == 2) {
                 node.status({fill: "red", shape: "ring", text: "missing python dependencies"});
                 node.log("missing python dependencies");
-            }else if (node.plate.plate_status == 3) {
+            } else if (node.plate.plate_status == 3) {
                 node.status({fill: "red", shape: "ring", text: "python process error"});
                 node.log("python process error");
-            }else if (!channelValid) {
+            } else if (!channelValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid channel"});
                 node.log("invalid channel");
             }
