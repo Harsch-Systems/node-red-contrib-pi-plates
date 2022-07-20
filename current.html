@@ -5,15 +5,72 @@
         defaults: {
             config_plate: { value: '', type: "pi_plate"},
             name: { value: ''},
-            channel: { value: "1", required: true}
+            channel: { value: 'not-set', required: true}
         },
         inputs: 1,
         outputs: 1,
         icon: "font-awesome/fa-tachometer",
         paletteLabel: '4-20mA Input',
         label: function () {
-            return (this.name || 'I' + this.channel);
-        }
+            return (this.name || this.channel);
+        },
+        oneditprepare: function() {
+            var node = this;
+            node.prev_config_id = $("#node-input-config_plate").val();
+            node.plate_model = 'unknown';
+
+            function draw_form() {
+                $("#channel_section").hide()
+                $("#node-input-channel").empty()
+                var config_id = $("#node-input-config_plate").val()
+                if (config_id == "_ADD_") {
+                    // no config node yet
+                } else {
+                    node.config_node = RED.nodes.node(config_id)
+                    node.plate_model = node.config_node.model;
+
+                    if (node.plate_model == "CURRENTplate") {
+                        var current_options = [
+                            {name: "Iin1", value: "1"},
+                            {name: "Iin2", value: "2"},
+                            {name: "Iin3", value: "3"},
+                            {name: "Iin4", value: "4"},
+                            {name: "Iin5", value: "5"},
+                            {name: "Iin6", value: "6"},
+                            {name: "Iin7", value: "7"},
+                            {name: "Iin8", value: "8"}
+                         ];
+                         for (var i = 0; i < current_options.length; i++)
+                            $('#node-input-channel').append('<option value="' + current_options[i].value + '">' + current_options[i].name + '</option>');
+
+                    } else if (node.plate_model == "ADCplate") {
+                        var adc_options = [
+                            {name: "I0", value: "I0"},
+                            {name: "I1", value: "I1"},
+                            {name: "I2", value: "I2"},
+                            {name: "I3", value: "I3"}
+                        ];
+                         for (var i = 0; i < adc_options.length; i++)
+                            $('#node-input-channel').append('<option value="' + adc_options[i].value + '">' + adc_options[i].name + '</option>');
+                    }
+
+                    // search for current setting (if it exists) and select
+                    if (node.channel) {
+                        $("#channel_section select").val(node.channel)
+                    }
+
+                    $("#channel_section").show()
+                }
+            }
+
+            $("#node-input-config_plate").on('focus', function() {node.prev_config_id = this.value}).change(function() {
+                // if config node selection has changed, clear our form selection and redraw the form
+                if (node.prev_config_id !== this.value) {
+                    node.plate_model = null;
+                }
+                draw_form()
+            });
+        } // oneditprepare
     });
 </script>
 
@@ -26,17 +83,9 @@
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
-    <div class="form-row">
+    <div class="form-row" id="channel_section">
         <label for="node-input-channel"><i class="icon-tag"></i> Channel #</label>
         <select id="node-input-channel">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
         </select>
     </div>
 </script>

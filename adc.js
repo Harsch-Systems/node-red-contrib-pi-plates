@@ -1,19 +1,32 @@
 module.exports = function (RED) {
     function ADCNode(config) {
         RED.nodes.createNode(this, config);
-        this.config_node = RED.nodes.getNode(config.config_plate);
-        this.plate = this.config_node.plate;
-        this.channel = config.channel;
+        let config_node = RED.nodes.getNode(config.config_plate);
+        this.plate = config_node.plate;
+        this.plate_model = config_node.model;
+        this.channel = null;
         this.voltage = 0;
         this.milliamps = 0;
+
+        console.log('plate is: ' + this.plate_model);
+
+        if (this.plate_model !== "ADCplate") {
+            this.channel = parseInt(config.channel, 10)
+        } else {
+            this.channel = config.channel
+        }
+
+        console.log('channel is: ' + this.channel);
 
         var node = this;
         node.on('input', function (msg) {
             let type = RED.nodes.getNode(config.config_plate).model;
+
             /* Valid DAQC/DAQC2 channels are 0 through 8.  Valid TINKER channels are 1 through 4 */
             let channelValid =
                 ((type == "DAQCplate" || type == "DAQC2plate") && (0 <= node.channel && node.channel < 9)) ||
-                (type == "TINKERplate" && (1 <= node.channel && node.channel < 5));
+                (type == "TINKERplate" && (1 <= node.channel && node.channel < 5)) ||
+                (type == "ADCplate" && (node.channel.match(/^S[0-7]/) || node.channel.match(/^D[0-3]/) ));
 
             if (!node.plate.plate_status && channelValid) {
                 const obj = {cmd: "getADC", args: {channel: node.channel}};

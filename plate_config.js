@@ -76,6 +76,7 @@ module.exports = function (RED) {
                     plate_cn.verified = false;
                 }
             });
+            // TODO need to add API for frontend to query plate details
         }
     }
     RED.nodes.registerType("pi_plate", PlateNode);

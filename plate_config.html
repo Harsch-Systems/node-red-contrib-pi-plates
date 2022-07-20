@@ -27,10 +27,6 @@
             <option value="7">7</option>
         </select>
     </div>
-    <div class="form-row">
-        <label for="node-config-input-toggle"><i class="icon-tag"></i>LED Toggle</label>
-        <button id="node-config-input-toggle" type="button" class="red-ui-button">Button</button>
-    </div>
 </script>
 
 <script type="text/x-red" data-help-name="pi_plate">
@@ -47,14 +43,6 @@
         },
         label: function () {
             return (this.model + ":" + this.address);
-        },
-        oneditprepare: function() {
-            $("#node-config-input-toggle").on("click", function(evt) {
-                // the button has been clicked
-                console.log('bar');
-                var plate = RED.nodes.getNode(config.plate)
-                plate.toggleLED();
-            });
         }
     });
 })();

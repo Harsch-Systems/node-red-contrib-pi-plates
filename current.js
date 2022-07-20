@@ -1,21 +1,41 @@
 module.exports = function (RED) {
     function CURRENTNode(config) {
         RED.nodes.createNode(this, config);
-        this.plate = RED.nodes.getNode(config.config_plate).plate;
-        this.channel = parseInt(config.channel, 10);
+        let config_node = RED.nodes.getNode(config.config_plate);
+        this.plate = config_node.plate;
+        this.plate_model = config_node.model;
+        this.channel = null;
         this.milliamps = 0;
+
+        if (this.plate_model !== "ADCplate") {
+            this.channel = parseInt(config.channel, 10);
+        } else {
+            this.channel = config.channel;
+        }
+
+        console.log('channel is: ' + this.channel)
 
         var node = this;
         node.on('input', function (msg) {
-            let type = RED.nodes.getNode(config.config_plate).model;
             /* Valid CURRENTplate channels are 1 through 8 */
-            let channelValid = ((type == "CURRENTplate") && (1 <= node.channel && node.channel < 8))
+            /* Valid ADCplate channels are I0 through I3 */
+            let channelValid = false;
+            if ((node.plate_model == "CURRENTplate") && (1 <= node.channel &&
+                 node.channel <= 8)) {
+                channelValid = true;
+            } else if ((node.plate_model == "ADCplate") &&
+                       typeof node.channel == "string") {
+                if (node.channel.match(/^I[0-3]/)) {
+                    channelValid = true;
+                }
+            }
 
+            console.log('valid: ' + channelValid + ' channel: ' + node.channel);
             if (!node.plate.plate_status && channelValid) {
-                const obj = {cmd: "getI", args: {channel: node.channel}};
+                const obj = {cmd: "getADC", args: {channel: node.channel}};
                 node.plate.send(obj, (reply) => {
                     node.milliamps = reply.milliamps;
-                    node.status({text: node.milliamps});
+                    node.status({text: node.milliamps + ' mA'});
                     node.send({payload: node.milliamps});
                 });
             } else if (node.plate.plate_status == 1) {
