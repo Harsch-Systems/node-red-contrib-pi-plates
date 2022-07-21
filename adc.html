@@ -21,6 +21,7 @@
             node.plate_model = 'unknown';
 
             function draw_form() {
+                $("#invalid_plate_section").hide()
                 $("#channel_section").hide()
                 $("#node-input-channel").empty()
                 $("#adc_input_section").hide()
@@ -46,6 +47,7 @@
                         ]
                         for (var i = 0; i < daqc_options.length; i++)
                             $('#node-input-channel').append('<option value="' + daqc_options[i].value + '">' + daqc_options[i].name + '</option>');
+                        $("#channel_section").show()
 
                     } else if (node.plate_model == "TINKERplate") {
                         var tinker_options = [
@@ -57,6 +59,7 @@
                         console.log('populating TINKER');
                         for (var i = 0; i < tinker_options.length; i++)
                             $('#node-input-channel').append('<option value="' + tinker_options[i].value + '">' + tinker_options[i].name + '</option>');
+                        $("#channel_section").show()
 
                     } else if (node.plate_model == "ADCplate") {
 
@@ -91,13 +94,17 @@
                         }
 
                         $("#adc_input_section").show();
+                        $("#channel_section").show()
+                    } else {
+                        $("#invalid_plate_section").show();
+                        $("#channel_section").hide()
+                        node.channel = null;
                     }
 
                     // search for current setting (if it exists) and select
                     if (node.channel) {
                         $("#channel_section select").val(node.channel)
                     }
-                    $("#channel_section").show()
                 }
             } //draw_form()
 
@@ -144,6 +151,10 @@
         <select id="node-input-channel">
         </select>
     </div>
+    <div class="form-row" id="invalid_plate_section">
+        <h2 color="red">Invalid plate selected</h2>
+    </div>
+    
 </script>
 
 <script type="text/x-red" data-help-name="ppADC">
