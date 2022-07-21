@@ -13,8 +13,6 @@ module.exports = function (RED) {
             this.channel = config.channel;
         }
 
-        console.log('channel is: ' + this.channel)
-
         var node = this;
         node.on('input', function (msg) {
             /* Valid CURRENTplate channels are 1 through 8 */
@@ -30,9 +28,14 @@ module.exports = function (RED) {
                 }
             }
 
-            console.log('valid: ' + channelValid + ' channel: ' + node.channel);
             if (!node.plate.plate_status && channelValid) {
-                const obj = {cmd: "getADC", args: {channel: node.channel}};
+                var cmd_string = "";
+                if (node.plate_model == "CURRENTplate") {
+                    cmd_string = "getI";
+                } else if (node.plate_model == "ADCplate") {
+                    cmd_string = "getADC";
+                }
+                const obj = {cmd: cmd_string, args: {channel: node.channel}};
                 node.plate.send(obj, (reply) => {
                     node.milliamps = reply.milliamps;
                     node.status({text: node.milliamps + ' mA'});

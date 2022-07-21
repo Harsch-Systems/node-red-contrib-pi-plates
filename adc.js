@@ -8,15 +8,11 @@ module.exports = function (RED) {
         this.voltage = 0;
         this.milliamps = 0;
 
-        console.log('plate is: ' + this.plate_model);
-
         if (this.plate_model !== "ADCplate") {
             this.channel = parseInt(config.channel, 10)
         } else {
             this.channel = config.channel
         }
-
-        console.log('channel is: ' + this.channel);
 
         var node = this;
         node.on('input', function (msg) {
