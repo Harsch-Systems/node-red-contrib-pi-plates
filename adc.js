@@ -10,8 +10,11 @@ module.exports = function (RED) {
 
         if (this.plate_model !== "ADCplate") {
             this.channel = parseInt(config.channel, 10)
+            // set to Easy Mode (Medium accuracy)
+            const conf = {cmd: "setMODE", args: {mode: 'MED'}};
+            node.plate.send(conf, (reply) => {});
         } else {
-            this.channel = config.channel
+            this.channel = config.channel;
         }
 
         var node = this;

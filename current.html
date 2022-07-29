@@ -10,7 +10,7 @@
         inputs: 1,
         outputs: 1,
         icon: "font-awesome/fa-tachometer",
-        paletteLabel: '4-20mA Input',
+        paletteLabel: '4-20mA IN',
         label: function () {
             return (this.name || this.channel);
         },
@@ -31,14 +31,14 @@
 
                     if (node.plate_model == "CURRENTplate") {
                         var current_options = [
-                            {name: "Iin1", value: "1"},
-                            {name: "Iin2", value: "2"},
-                            {name: "Iin3", value: "3"},
-                            {name: "Iin4", value: "4"},
-                            {name: "Iin5", value: "5"},
-                            {name: "Iin6", value: "6"},
-                            {name: "Iin7", value: "7"},
-                            {name: "Iin8", value: "8"}
+                            {name: "Iin1", value: "Iin1"},
+                            {name: "Iin2", value: "Iin2"},
+                            {name: "Iin3", value: "Iin3"},
+                            {name: "Iin4", value: "Iin4"},
+                            {name: "Iin5", value: "Iin5"},
+                            {name: "Iin6", value: "Iin6"},
+                            {name: "Iin7", value: "Iin7"},
+                            {name: "Iin8", value: "Iin8"}
                          ];
                          for (var i = 0; i < current_options.length; i++)
                             $('#node-input-channel').append('<option value="' + current_options[i].value + '">' + current_options[i].name + '</option>');

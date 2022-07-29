@@ -15,24 +15,31 @@ module.exports = function (RED) {
         node.on('input', function (msg) {
             let type = RED.nodes.getNode(config.config_plate).model;
             let channelValid = false;
+            let cmd_str = "getDINbit";
             if (type == "DAQCplate" || type == "DAQC2plate") {
                 // valid values are 0-7
                 if (node.input >= 0 && node.input <= 7) {
                     channelValid = true;
                 }
-            } else if (type == "TINKERplate" || type == "DIGIplate") {
+            } else if (type == "DIGIplate") {
                 // valid values are 1-8
                 if (node.input >= 1 && node.input <= 8) {
                     channelValid = true;
                 }
             } else if (type == "ADCplate") {
-                if (node.input >= 0 && node.input <= 3) {
+                // 0-3 plus TRIG is 4
+                if (node.input >= 0 && node.input <= 4) {
                     channelValid = true;
                 }
+            } else if (type == "TINKERplate") {
+                if (node.input >= 1 && node.input <= 8) {
+                    channelValid = true;
+                }
+                cmd_str = "getDIN";
             }
 
             if (!node.plate.plate_status && channelValid) {
-                const obj = {cmd: "getDINbit", args: {bit: node.input}};
+                const obj = {cmd: cmd_str, args: {bit: node.input}};
                 node.plate.send(obj, (reply) => {
                     node.state = reply.state
                     node.status({text: node.state});

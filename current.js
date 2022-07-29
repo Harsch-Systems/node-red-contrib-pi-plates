@@ -4,38 +4,34 @@ module.exports = function (RED) {
         let config_node = RED.nodes.getNode(config.config_plate);
         this.plate = config_node.plate;
         this.plate_model = config_node.model;
-        this.channel = null;
+        this.channel = config.channel;
         this.milliamps = 0;
-
-        if (this.plate_model !== "ADCplate") {
-            this.channel = parseInt(config.channel, 10);
-        } else {
-            this.channel = config.channel;
-        }
 
         var node = this;
         node.on('input', function (msg) {
             /* Valid CURRENTplate channels are 1 through 8 */
             /* Valid ADCplate channels are I0 through I3 */
             let channelValid = false;
-            if ((node.plate_model == "CURRENTplate") && (1 <= node.channel &&
-                 node.channel <= 8)) {
-                channelValid = true;
+            let channel_arg = null;
+            let cmd_string = "";
+            if ((node.plate_model == "CURRENTplate") &&
+                typeof node.channel == "string") {
+                if (node.channel.match(/^Iin[1-8]/)) {
+                    channelValid = true;
+                    channel_arg = parseInt(node.channel.charAt(3), 10);
+                    cmd_string = "getI";
+                }
             } else if ((node.plate_model == "ADCplate") &&
                        typeof node.channel == "string") {
                 if (node.channel.match(/^I[0-3]/)) {
                     channelValid = true;
+                    channel_arg = node.channel;
+                    cmd_string = "getADC";
                 }
             }
 
             if (!node.plate.plate_status && channelValid) {
-                var cmd_string = "";
-                if (node.plate_model == "CURRENTplate") {
-                    cmd_string = "getI";
-                } else if (node.plate_model == "ADCplate") {
-                    cmd_string = "getADC";
-                }
-                const obj = {cmd: cmd_string, args: {channel: node.channel}};
+                const obj = {cmd: cmd_string, args: {channel: channel_arg}};
                 node.plate.send(obj, (reply) => {
                     node.milliamps = reply.milliamps;
                     node.status({text: node.milliamps + ' mA'});
