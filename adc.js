@@ -8,16 +8,17 @@ module.exports = function (RED) {
         this.voltage = 0;
         this.milliamps = 0;
 
+        var node = this;
+
         if (this.plate_model !== "ADCplate") {
             this.channel = parseInt(config.channel, 10)
+        } else {
+            this.channel = config.channel;
             // set to Easy Mode (Medium accuracy)
             const conf = {cmd: "setMODE", args: {mode: 'MED'}};
             node.plate.send(conf, (reply) => {});
-        } else {
-            this.channel = config.channel;
         }
 
-        var node = this;
         node.on('input', function (msg) {
             let type = RED.nodes.getNode(config.config_plate).model;
 
