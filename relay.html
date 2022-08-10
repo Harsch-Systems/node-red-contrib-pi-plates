@@ -13,8 +13,68 @@
         icon: 'relay.svg',
         paletteLabel: 'RELAY',
         label: function () {
-            return (this.name || 'RELAY' + this.relay);
-        }
+            return (this.name || 'RELAY ' + this.relay);
+        },
+        oneditprepare: function () {
+            var node = this;
+            node.prev_config_id = $("#node-input-config_plate").val();
+            node.plate_model = 'unknown';
+
+            function draw_form() {
+                $("#invalid_plate_section").hide();
+                $("#relay_section").hide();
+                $("#node-input-relay").empty()
+                var config_id = $("#node-input-config_plate").val();
+                if (config_id == "_ADD_") {
+                    // no config node yet
+                } else {
+                    node.config_node = RED.nodes.node(config_id)
+                    node.plate_model = node.config_node.model;
+
+                    if (node.plate_model  == "RELAYplate" || node.plate_model == "RELAYplate2") {
+                        var relay_options = [
+                            {name: "K1", value: 1},
+                            {name: "K2", value: 2},
+                            {name: "K3", value: 3},
+                            {name: "K4", value: 4},
+                            {name: "K5", value: 5},
+                            {name: "K6", value: 6},
+                            {name: "K7", value: 7}
+                        ]
+                        for (var i = 0; i < relay_options.length; i++)
+                            $('#node-input-relay').append('<option value="' + relay_options[i].value + '">' + relay_options[i].name + '</option>');
+                        if (node.plate_model == "RELAYplate2")
+                            $('#node-input-relay').append('<option value="8">K8</option>');
+
+                        $("#relay_section").show()
+
+                    } else if (node.plate_model == "TINKERplate") {
+                        var tink_options = [
+                            {name: "Relay 1", value: 1},
+                            {name: "Relay 2", value: 2}
+                        ]
+                        for (var i = 0; i < tink_options.length; i++)
+                            $('#node-input-relay').append('<option value="' + tink_options[i].value + '">' + tink_options[i].name + '</option>');
+                        $("#relay_section").show()
+
+                    } else {
+                        $("#invalid_plate_section").show();
+                        $("#relay_section").hide();
+                        node.input = null;
+                    }
+                    if (node.relay) {
+                        $("#relay_section select").val(node.relay);
+                    }
+                }
+            } // draw_form()
+            $("#node-input-config_plate").on('focus', function() {node.prev_config_id = this.value}).change(function() {
+                // if config node selection has changed, clear our form selection and redraw the form
+                if (node.prev_config_id !== this.value) {
+                    node.plate_model = null;
+                }
+                draw_form()
+            });
+        } // oneditprepare()
     });
 </script>
 
@@ -27,18 +87,13 @@
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
-    <div class="form-row">
+    <div class="form-row" id="relay_section">
         <label for="node-input-relay"><i class="icon-tag"></i> Relay #</label>
         <select id="node-input-relay">
-            <option value="1">K1</option>
-            <option value="2">K2</option>
-            <option value="3">K3</option>
-            <option value="4">K4</option>
-            <option value="5">K5</option>
-            <option value="6">K6</option>
-            <option value="7">K7</option>
-            <option value="8">K8</option>
         </select>
+    </div>
+    <div class="form-row" id="invalid_plate_section">
+        <h3 style="color: red">Invalid plate selected</h2>
     </div>
 </script>
 

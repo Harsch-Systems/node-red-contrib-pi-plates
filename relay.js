@@ -1,14 +1,18 @@
 module.exports = function (RED) {
     function RelayNode(config) {
         RED.nodes.createNode(this, config);
-        this.plate = RED.nodes.getNode(config.config_plate).plate;
+        this.config_node = RED.nodes.getNode(config.config_plate);
+        this.plate = this.config_node.plate;
+        this.plate_model = this.config_node.model;
         this.relay = parseInt(config.relay, 10);
         this.state = "UNKNOWN";
 
         var node = this;
         node.on('input', function (msg) {
             let type = RED.nodes.getNode(config.config_plate).model;
-            let relayValid = (type == "RELAYplate2" || type == "RELAYplate" && node.relay < 8 || type == "TINKERplate" && node.relay < 3);
+            let relayValid = (type == "RELAYplate2" && node.relay <= 8 ||
+                              type == "RELAYplate" && node.relay < 8 ||
+                              type == "TINKERplate" && node.relay < 3);
 
             let validInputs = ["on", "off", "toggle"];
             let inputValid = (typeof msg.payload === 'string' && validInputs.includes(msg.payload));
