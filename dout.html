@@ -14,7 +14,72 @@
         paletteLabel: 'DOUT',
         label: function () {
             return (this.name || 'DOUT' + this.output);
-        }
+        },
+        oneditprepare: function () {
+            var node = this;
+            node.prev_config_id = $("#node-input-config_plate").val();
+            node.plate_model = 'unknown';
+
+            function draw_form() {
+                $("#invalid_plate_section").hide();
+                $("#output_section").hide();
+                $("#node-input-output").empty()
+                var config_id = $("#node-input-config_plate").val();
+                if (config_id == "_ADD_") {
+                    // no config node yet
+                } else {
+                    node.config_node = RED.nodes.node(config_id)
+                    node.plate_model = node.config_node.model;
+
+                    if (node.plate_model  == "DAQCplate" || node.plate_model == "DAQC2plate") {
+                        var daqc_options = [
+                            {name: "DOUT0", value: 0},
+                            {name: "DOUT1", value: 1},
+                            {name: "DOUT2", value: 2},
+                            {name: "DOUT3", value: 3},
+                            {name: "DOUT4", value: 4},
+                            {name: "DOUT5", value: 5},
+                            {name: "DOUT6", value: 6}
+                        ]
+                        for (var i = 0; i < daqc_options.length; i++)
+                            $('#node-input-output').append('<option value="' + daqc_options[i].value + '">' + daqc_options[i].name + '</option>');
+                        if (node.plate_model == "DAQC2plate")
+                            $('#node-input-output').append('<option value="7">DOUT7</option>');
+                        $("#output_section").show()
+
+                    } else if (node.plate_model == "TINKERplate") {
+                        var tink_options = [
+                            {name: "DIO1", value: 1},
+                            {name: "DIO2", value: 2},
+                            {name: "DIO3", value: 3},
+                            {name: "DIO4", value: 4},
+                            {name: "DIO5", value: 5},
+                            {name: "DIO6", value: 6},
+                            {name: "DIO7", value: 7},
+                            {name: "DIO8", value: 8}
+                        ]
+                        for (var i = 0; i < tink_options.length; i++)
+                            $('#node-input-output').append('<option value="' + tink_options[i].value + '">' + tink_options[i].name + '</option>');
+                        $("#output_section").show()
+
+                    } else {
+                        $("#invalid_plate_section").show();
+                        $("#output_section").hide();
+                        node.output = null;
+                    }
+                    if (node.input) {
+                        $("#output_section select").val(node.output);
+                    }
+                }
+            } // draw_form()
+            $("#node-input-config_plate").on('focus', function() {node.prev_config_id = this.value}).change(function() {
+                // if config node selection has changed, clear our form selection and redraw the form
+                if (node.prev_config_id !== this.value) {
+                    node.plate_model = null;
+                }
+                draw_form()
+            });
+        } // oneditprepare()
     });
 </script>
 
@@ -27,19 +92,13 @@
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
-    <div class="form-row">
+    <div class="form-row" id="output_section">
         <label for="node-input-output"><i class="icon-tag"></i> Output #</label>
         <select id="node-input-output">
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
         </select>
+    </div>
+    <div class="form-row" id="invalid_plate_section">
+        <h3 style="color: red">Invalid plate selected</h2>
     </div>
 </script>
 
