@@ -14,7 +14,92 @@
         paletteLabel: 'DAC',
         label: function () {
             return (this.name || 'DAC' + this.channel);
-        }
+        },
+        outputLabels: function(index) {
+            let daqc_labels = ['DAC0', 'DAC1'];
+            let daqc2_labels = ['AOUT0','AOUT1','AOUT2','AOUT3'];
+            let node = this;
+            if (node.plate_model && node.channel) {
+                let chan_index = parseInt(node.channel, 10);
+                if (node.plate_model == "DAQCplate") {
+                    return(daqc_labels[chan_index]);
+                } else if (node.plate_model == "DAQC2plate") {
+                    return(daqc2_labels[chan_index]);
+                } else {
+                    return('');
+                }
+            } else {
+                return('');
+            }
+        },
+        oneditprepare: function() {
+            var node = this;
+            node.prev_config_id = $("#node-input-config_plate").val();
+            node.plate_model = 'unknown';
+
+            function draw_form() {
+                $("#invalid_plate_section").hide()
+                $("#channel_section").hide()
+                $("#node-input-channel").empty()
+                var config_id = $("#node-input-config_plate").val()
+                if (config_id == "_ADD_") {
+                    // no config node yet
+                } else {
+                    node.config_node = RED.nodes.node(config_id)
+                    node.plate_model = node.config_node.model;
+
+                    if (node.plate_model  == "DAQCplate") {
+                        // valid inputs are 0 through 8, where 8 is special (+5v supply voltage)
+                        var daqc_options = [
+                            {name: "DAC0", value: 0},
+                            {name: "DAC1", value: 1}
+                        ];
+                        for (var i = 0; i < daqc_options.length; i++)
+                            $('#node-input-channel').append('<option value="' + daqc_options[i].value + '">' + daqc_options[i].name + '</option>');
+                        $("#channel_section").show()
+                    } else if (node.plate_model == "DAQC2plate") {
+                        var daqc2_options = [
+                            {name: "AOUT0", value: 0},
+                            {name: "AOUT1", value: 1},
+                            {name: "AOUT2", value: 2},
+                            {name: "AOUT3", value: 3}
+                        ];
+                        for (var i = 0; i < daqc2_options.length; i++)
+                            $('#node-input-channel').append('<option value="' + daqc2_options[i].value + '">' + daqc2_options[i].name + '</option>');
+                        $("#channel_section").show()
+
+                    } else {
+                        $("#invalid_plate_section").show();
+                        $("#channel_section").hide()
+                        node.channel = null;
+                    }
+
+                    // search for current setting (if it exists) and select
+                    if (node.channel) {
+                        $("#channel_section select").val(node.channel)
+                    }
+                }
+            } //draw_form()
+
+            $("#node-input-config_plate").on('focus', function() {node.prev_config_id = this.value}).change(function() {
+                // if config node selection has changed, clear our form selection and redraw the form
+                if (node.prev_config_id !== this.value) {
+                    node.plate_model = null;
+                }
+                draw_form()
+            });
+
+            $("#node-input-adc_input_type").change(function () {
+                node.adc_input_type = $('#node-input-adc_input_type').val();
+                draw_form()
+            });
+
+            //$.getJSON('config_options', function(data) {
+            //    var response = data || [];
+            //});
+
+
+        } //oneditprepare()
     });
 </script>
 
@@ -27,14 +112,13 @@
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
-    <div class="form-row">
+    <div class="form-row" id="channel_section">
         <label for="node-input-channel"><i class="icon-tag"></i> Channel #</label>
         <select id="node-input-channel">
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
         </select>
+    </div>
+    <div class="form-row" id="invalid_plate_section">
+        <h2 color="red">Invalid plate selected</h2>
     </div>
 </script>
 
