@@ -13,6 +13,25 @@
         label: function () {
             return (this.name || 'ADC');
         },
+        outputLabels: function(index) {
+            let tinker_labels = ['AIN1', 'AIN2', 'AIN3', 'AIN4'];
+            let daqc_labels = ['AIN0', 'AIN1', 'AIN2', 'AIN3', 'AIN4', 'AIN5', 'AIN6', 'AIN7', '5VDC In'];
+            let adc_labels = ['S0','S1','S2','S3','S4','S5','S6','S7','D0','D1','D2','D3','I0','I1','I2','I3'];
+            let node = this;
+            if (node.plate_model) {
+                if (node.plate_model == "TINKERplate") {
+                    return(tinker_labels[index]);
+                } else if (node.plate_model == "DAQCplate" || node.plate_model == "DAQC2plate") {
+                    return(daqc_labels[index]);
+                } else if (node.plate_model == "ADCplate") {
+                    return(adc_labels[index]);
+                } else {
+                    return('');
+                }
+            } else {
+                return('');
+            }
+        },
         oneditprepare: function() {
             var node = this;
             node.prev_config_id = $("#node-input-config_plate").val();
