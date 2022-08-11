@@ -14,6 +14,31 @@
         label: function () {
             return (this.name || 'DIN' + this.input);
         },
+        outputLabels: function(index) {
+            let daqc_labels = ['DIN0','DIN1','DIN2','DIN3','DIN4','DIN5','DIN6','DIN7'];
+            let adc_labels = ['DIN0','DIN1','DIN2','DIN3','TRIG'];
+            let digi_labels = ['DIN1','DIN2','DIN3','DIN4','DIN5','DIN6','DIN7','DIN8'];
+            let tinker_labels = ['DIO1','DIO2','DIO3','DIO4','DIO5','DIO6','DIO7','DIO8'];
+            let node = this;
+            if (node.plate_model && node.input) {
+                let input_index = parseInt(node.input, 10);
+                if (node.plate_model == "TINKERplate") {
+                    input_index -= 1;
+                    return(tinker_labels[input_index]);
+                } else if (node.plate_model == "DIGIplate") {
+                    input_index -= 1;
+                    return(digi_labels[input_index]);
+                } else if (node.plate_model == "DAQCplate" || node.plate_model == "DAQC2plate") {
+                    return(daqc_labels[input_index]);
+                } else if (node.plate_model == "ADCplate") {
+                    return(adc_labels[input_index]);
+                } else {
+                    return('');
+                }
+            } else {
+                return('');
+            }
+        },
         oneditprepare: function () {
             var node = this;
             node.prev_config_id = $("#node-input-config_plate").val();
