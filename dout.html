@@ -15,6 +15,27 @@
         label: function () {
             return (this.name || 'DOUT' + this.output);
         },
+        outputLabels: function(index) {
+            let daqc_labels = ['DOUT0','DOUT1','DOUT2','DOUT3','DOUT4','DOUT5','DOUT6'];
+            let daqc2_labels = ['DOUT0','DOUT1','DOUT2','DOUT3','DOUT4','DOUT5','DOUT6','DOUT7'];
+            let tinker_labels = ['DIO1','DIO2','DIO3','DIO4','DIO5','DIO6','DIO7','DIO8'];
+            let node = this;
+            if (node.plate_model && node.output) {
+                let output_index = parseInt(node.output, 10);
+                if (node.plate_model == "TINKERplate") {
+                    output_index -= 1;
+                    return(tinker_labels[output_index]);
+                } else if (node.plate_model == "DAQCplate") {
+                    return(daqc_labels[output_index]);
+                } else if (node.plate_model == "DAQC2plate") {
+                    return(daqc2_labels[output_index]);
+                } else {
+                    return('');
+                }
+            } else {
+                return('');
+            }
+        },
         oneditprepare: function () {
             var node = this;
             node.prev_config_id = $("#node-input-config_plate").val();
@@ -67,7 +88,7 @@
                         $("#output_section").hide();
                         node.output = null;
                     }
-                    if (node.input) {
+                    if (node.output) {
                         $("#output_section select").val(node.output);
                     }
                 }
