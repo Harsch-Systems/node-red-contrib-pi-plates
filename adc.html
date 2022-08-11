@@ -15,6 +15,26 @@
         label: function () {
             return (this.name || 'ADC ' + this.channel);
         },
+        outputLabels: function(index) {
+            let tinker_labels = ['AIN1', 'AIN2', 'AIN3', 'AIN4'];
+            let daqc_labels = ['AIN0', 'AIN1', 'AIN2', 'AIN3', 'AIN4', 'AIN5', 'AIN6', 'AIN7', '5VDC In'];
+            let node = this;
+            if (node.plate_model && node.channel) {
+                if (node.plate_model == "TINKERplate") {
+                    let chan_index = parseInt(node.channel, 10) - 1;
+                    return(tinker_labels[chan_index]);
+                } else if (node.plate_model == "DAQCplate" || node.plate_model == "DAQC2plate") {
+                    let chan_index = parseInt(node.channel, 10);
+                    return(daqc_labels[chan_index]);
+                } else if (node.plate_model == "ADCplate") {
+                    return(node.channel);
+                } else {
+                    return('');
+                }
+            } else {
+                return('');
+            }
+        },
         oneditprepare: function() {
             var node = this;
             node.prev_config_id = $("#node-input-config_plate").val();
@@ -35,15 +55,15 @@
                     if (node.plate_model  == "DAQCplate" || node.plate_model == "DAQC2plate") {
                         // valid inputs are 0 through 8, where 8 is special (+5v supply voltage)
                         var daqc_options = [
-                            {name: "AIN0", value: "0"},
-                            {name: "AIN1", value: "1"},
-                            {name: "AIN2", value: "2"},
-                            {name: "AIN3", value: "3"},
-                            {name: "AIN4", value: "4"},
-                            {name: "AIN5", value: "5"},
-                            {name: "AIN6", value: "6"},
-                            {name: "AIN7", value: "7"},
-                            {name: "+5V Supply", value: "8"}
+                            {name: "AIN0", value: 0},
+                            {name: "AIN1", value: 1},
+                            {name: "AIN2", value: 2},
+                            {name: "AIN3", value: 3},
+                            {name: "AIN4", value: 4},
+                            {name: "AIN5", value: 5},
+                            {name: "AIN6", value: 6},
+                            {name: "AIN7", value: 7},
+                            {name: "+5V Supply", value: 8}
                         ]
                         for (var i = 0; i < daqc_options.length; i++)
                             $('#node-input-channel').append('<option value="' + daqc_options[i].value + '">' + daqc_options[i].name + '</option>');
@@ -51,10 +71,10 @@
 
                     } else if (node.plate_model == "TINKERplate") {
                         var tinker_options = [
-                            {name: "AIN1", value: "1"},
-                            {name: "AIN2", value: "2"},
-                            {name: "AIN3", value: "3"},
-                            {name: "AIN4", value: "4"}
+                            {name: "AIN1", value: 1},
+                            {name: "AIN2", value: 2},
+                            {name: "AIN3", value: 3},
+                            {name: "AIN4", value: 4}
                         ]
                         for (var i = 0; i < tinker_options.length; i++)
                             $('#node-input-channel').append('<option value="' + tinker_options[i].value + '">' + tinker_options[i].name + '</option>');
