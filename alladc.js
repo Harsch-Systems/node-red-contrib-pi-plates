@@ -1,13 +1,20 @@
 module.exports = function (RED) {
     function AllADCNode(config) {
         RED.nodes.createNode(this, config);
-        this.plate = RED.nodes.getNode(config.config_plate).plate;
-        this.outputs = [8];
+        this.config_node = RED.nodes.getNode(config.config_plate);
+        this.plate = this.config_node.plate;
+        this.plate_model = this.config_node.model
+        if (this.plate_model == "DAQCplate" || this.plate_model == "DAQC2plate") {
+            this.outputs = new Array(9);
+        } else if (this.plate_model == "TINKERplate") {
+            this.outputs = new Array(4);
+        } else if (this.plate_model == "ADCplate") {
+            this.outputs = new Array(16);
+        }
 
         var node = this;
         node.on('input', function (msg) {
-            let type = RED.nodes.getNode(config.config_plate).model;
-            /* DAQC/DAQC2 have 8 ADC inputs, TINKER has 4 */
+            /* DAQC/DAQC2 have 8+1(5VDC) ADC inputs, TINKER has 4, ADC has 16 */
 
             if (!node.plate.plate_status) {
                 const obj = {cmd: "getADCall", args: {}};

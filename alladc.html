@@ -7,12 +7,51 @@
             name: { value: ''}
         },
         inputs: 1,
-        outputs: 8,
+        outputs: 1,
         icon: 'analog.png',
         paletteLabel: 'allADC',
         label: function () {
             return (this.name || 'ADC');
-        }
+        },
+        oneditprepare: function() {
+            var node = this;
+            node.prev_config_id = $("#node-input-config_plate").val();
+            node.plate_model = 'unknown';
+
+            function adapt_node() {
+                $("#invalid_plate_section").hide()
+                var config_id = $("#node-input-config_plate").val()
+                if (config_id == "_ADD_") {
+                    // no config node yet
+                } else {
+                    node.config_node = RED.nodes.node(config_id)
+                    node.plate_model = node.config_node.model;
+
+                    if (node.plate_model  == "DAQCplate" || node.plate_model == "DAQC2plate") {
+                        node.outputs = 9;
+                    } else if (node.plate_model == "TINKERplate") {
+                        node.outputs = 4;
+                    } else if (node.plate_model == "ADCplate") {
+                        node.outputs = 16;
+                    } else {
+                        $("#invalid_plate_section").show();
+                    }
+
+                    // search for current setting (if it exists) and select
+                    if (node.channel) {
+                        $("#channel_section select").val(node.channel)
+                    }
+                }
+            } //adapt_node()
+
+            $("#node-input-config_plate").on('focus', function() {node.prev_config_id = this.value}).change(function() {
+                // if config node selection has changed, reset # of outputs based on plate model
+                if (node.prev_config_id !== this.value) {
+                    node.plate_model = null;
+                }
+                adapt_node()
+            });
+        } //oneditprepare()
     });
 </script>
 
@@ -24,6 +63,9 @@
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row" id="invalid_plate_section">
+        <h2 color="red">Invalid plate selected</h2>
     </div>
 </script>
 
