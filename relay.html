@@ -15,6 +15,26 @@
         label: function () {
             return (this.name || 'RELAY ' + this.relay);
         },
+        outputLabels: function(index) {
+            let tinker_labels = ['Relay 1', 'Relay 2'];
+            let relay_labels = ['K1', 'K2', 'K3', 'K4', 'K5', 'K6', 'K7'];
+            let relay2_labels = ['K1', 'K2', 'K3', 'K4', 'K5', 'K6', 'K7', 'K8'];
+            let node = this;
+            if (node.plate_model && node.relay) {
+                let relay_index = parseInt(node.relay, 10) - 1;
+                if (node.plate_model == "TINKERplate") {
+                    return(tinker_labels[relay_index]);
+                } else if (node.plate_model == "RELAYplate") {
+                    return(relay_labels[relay_index]);
+                } else if (node.plate_model == "RELAYplate2") {
+                    return(relay2_labels[relay_index]);
+                } else {
+                    return('');
+                }
+            } else {
+                return('');
+            }
+        },
         oneditprepare: function () {
             var node = this;
             node.prev_config_id = $("#node-input-config_plate").val();
@@ -49,6 +69,7 @@
                         $("#relay_section").show()
 
                     } else if (node.plate_model == "TINKERplate") {
+                        node.outputLabels = function(index) { return("bar " + index); };
                         var tink_options = [
                             {name: "Relay 1", value: 1},
                             {name: "Relay 2", value: 2}
