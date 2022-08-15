@@ -16,9 +16,9 @@ module.exports = function (RED) {
             let cmd_string = "";
             if ((node.plate_model == "CURRENTplate") &&
                 typeof node.channel == "string") {
-                if (node.channel.match(/^Iin[1-8]/)) {
+                    channel_arg = parseInt(node.channel, 10);
+                if (node.channel > 0 && node.channel < 9) {
                     channelValid = true;
-                    channel_arg = parseInt(node.channel.charAt(3), 10);
                     cmd_string = "getI";
                 }
             } else if ((node.plate_model == "ADCplate") &&

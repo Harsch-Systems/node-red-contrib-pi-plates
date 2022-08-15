@@ -12,7 +12,39 @@
         paletteLabel: 'FREQ',
         label: function () {
             return (this.name || 'FREQ');
-        }
+        },
+        outputLabels: ["Freq In"],
+        oneditprepare: function() {
+            var node = this;
+            node.prev_config_id = $("#node-input-config_plate").val();
+            node.plate_model = 'unknown';
+
+            function draw_form() {
+                $("#invalid_plate_section").hide()
+                var config_id = $("#node-input-config_plate").val()
+                if (config_id == "_ADD_") {
+                    // no config node yet
+                } else {
+                    node.config_node = RED.nodes.node(config_id)
+                    node.plate_model = node.config_node.model;
+
+                    if (node.plate_model == "DAQC2plate") {
+                        // valid plate type
+                    } else {
+                        $("#invalid_plate_section").show();
+                        node.channel = null;
+                    }
+                }
+            } //draw_form()
+
+            $("#node-input-config_plate").on('focus', function() {node.prev_config_id = this.value}).change(function() {
+                // if config node selection has changed, clear our form selection and redraw the form
+                if (node.prev_config_id !== this.value) {
+                    node.plate_model = null;
+                }
+                draw_form()
+            });
+        } //oneditprepare()
     });
 </script>
 
@@ -24,6 +56,9 @@
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row" id="invalid_plate_section">
+        <h2 style="color: red">Invalid plate selected</h2>
     </div>
 </script>
 

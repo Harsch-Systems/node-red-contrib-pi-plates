@@ -14,7 +14,85 @@
         paletteLabel: 'DS18B20',
         label: function () {
             return (this.name || 'TEMP' + this.input);
-        }
+        },
+        outputLabels: function(index) {
+            let thermo_labels = ['Input 9','Input 10','Input 11','Input 12'];
+            let tinker_labels = ['DIO1','DIO2','DIO3','DIO4','DIO5','DIO6','DIO7','DIO8'];
+            let node = this;
+            if (node.plate_model && node.input) {
+                let input_index = parseInt(node.input, 10);
+                if (node.plate_model == "TINKERplate") {
+                    input_index -= 1;
+                    return(tinker_labels[input_index]);
+                } else if (node.plate_model == "THERMOplate") {
+                    input_index -= 9;
+                    return(thermo_labels[input_index]);
+                } else {
+                    return('');
+                }
+            } else {
+                return('');
+            }
+        },
+        oneditprepare: function () {
+            var node = this;
+            node.prev_config_id = $("#node-input-config_plate").val();
+            node.plate_model = 'unknown';
+
+            function draw_form() {
+                $("#invalid_plate_section").hide();
+                $("#input_section").hide();
+                $("#node-input-input").empty()
+                var config_id = $("#node-input-config_plate").val();
+                if (config_id == "_ADD_") {
+                    // no config node yet
+                } else {
+                    node.config_node = RED.nodes.node(config_id)
+                    node.plate_model = node.config_node.model;
+
+                    if (node.plate_model  == "THERMOplate") {
+                        var thermo_options= [
+                            {name: "Input 9", value: 9},
+                            {name: "Input 10", value: 10},
+                            {name: "Input 11", value: 11},
+                            {name: "Input 12", value: 12}
+                        ]
+                        for (var i = 0; i < thermo_options.length; i++)
+                            $('#node-input-input').append('<option value="' + thermo_options[i].value + '">' + thermo_options[i].name + '</option>');
+                        $("#input_section").show()
+
+                    } else if (node.plate_model == "TINKERplate") {
+                        var tink_options = [
+                            {name: "DIO1", value: 1},
+                            {name: "DIO2", value: 2},
+                            {name: "DIO3", value: 3},
+                            {name: "DIO4", value: 4},
+                            {name: "DIO5", value: 5},
+                            {name: "DIO6", value: 6},
+                            {name: "DIO7", value: 7},
+                            {name: "DIO8", value: 8}
+                        ]
+                        for (var i = 0; i < tink_options.length; i++)
+                            $('#node-input-input').append('<option value="' + tink_options[i].value + '">' + tink_options[i].name + '</option>');
+                        $("#input_section").show()
+                   } else {
+                        $("#invalid_plate_section").show();
+                        $("#input_section").hide();
+                        node.input = null;
+                    }
+                    if (node.input) {
+                        $("#input_section select").val(node.input);
+                    }
+                }
+            } // draw_form()
+            $("#node-input-config_plate").on('focus', function() {node.prev_config_id = this.value}).change(function() {
+                // if config node selection has changed, clear our form selection and redraw the form
+                if (node.prev_config_id !== this.value) {
+                    node.plate_model = null;
+                }
+                draw_form()
+            });
+        } // oneditprepare()
     });
 </script>
 
@@ -35,19 +113,13 @@
             <option value="k">Kelvin</option>
         </select>
     </div>
-    <div class="form-row">
+    <div class="form-row" id="input_section">
         <label for="node-input-input"><i class="icon-tag"></i> Input #</label>
         <select id="node-input-input">
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
         </select>
+    </div>
+    <div class="form-row" id="invalid_plate_section">
+        <h3 style="color: red">Invalid plate selected</h2>
     </div>
 </script>
 

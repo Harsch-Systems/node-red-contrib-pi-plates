@@ -14,7 +14,84 @@
         paletteLabel: 'PWM',
         label: function () {
             return (this.name || 'PWM' + this.channel);
-        }
+        },
+        outputLabels: function(index) {
+            let daqc_labels = ['PWM0', 'PWM1'];
+            let tinker_labels = ['DIO1','DIO2','DIO3','DIO4','DIO5','DIO6','DIO7','DIO8'];
+            let node = this;
+            if (node.plate_model && node.channel) {
+                let chan_index = parseInt(node.channel, 10);
+                if (node.plate_model == "DAQCplate" || node.plate_model == "DAQC2plate") {
+                    return(daqc_labels[chan_index]);
+                } else if (node.plate_model == "TINKERplate") {
+                    chan_index -= 1;
+                    return(tinker_labels[chan_index]);
+                } else {
+                    return('');
+                }
+            } else {
+                return('');
+            }
+        },
+        oneditprepare: function() {
+            var node = this;
+            node.prev_config_id = $("#node-input-config_plate").val();
+            node.plate_model = 'unknown';
+
+            function draw_form() {
+                $("#invalid_plate_section").hide()
+                $("#channel_section").hide()
+                $("#node-input-channel").empty()
+                var config_id = $("#node-input-config_plate").val()
+                if (config_id == "_ADD_") {
+                    // no config node yet
+                } else {
+                    node.config_node = RED.nodes.node(config_id)
+                    node.plate_model = node.config_node.model;
+
+                    if (node.plate_model  == "DAQCplate" || node.plate_model  == "DAQC2plate") {
+                        var daqc_options = [
+                            {name: "PWM0", value: 0},
+                            {name: "PWM1", value: 1}
+                        ];
+                        for (var i = 0; i < daqc_options.length; i++)
+                            $('#node-input-channel').append('<option value="' + daqc_options[i].value + '">' + daqc_options[i].name + '</option>');
+                        $("#channel_section").show()
+                    } else if (node.plate_model  == "TINKERplate") {
+                        var tink_options = [
+                            {name: "DIO1", value: 1},
+                            {name: "DIO2", value: 2},
+                            {name: "DIO3", value: 3},
+                            {name: "DIO4", value: 4},
+                            {name: "DIO5", value: 5},
+                            {name: "DIO6", value: 6},
+                            {name: "DIO7", value: 7},
+                            {name: "DIO8", value: 8}
+                        ];
+                        for (var i = 0; i < tink_options.length; i++)
+                            $('#node-input-channel').append('<option value="' + tink_options[i].value + '">' + tink_options[i].name + '</option>');
+                        $("#channel_section").show()
+                    } else {
+                        $("#invalid_plate_section").show();
+                        $("#channel_section").hide()
+                        node.channel = null;
+                    }
+
+                    // search for current setting (if it exists) and select
+                    if (node.channel) {
+                        $("#channel_section select").val(node.channel)
+                    }
+                }
+            } //draw_form()
+
+            $("#node-input-config_plate").on('focus', function() {node.prev_config_id = this.value}).change(function() {
+                // if config node selection has changed, clear our form selection and redraw the form
+                if (node.prev_config_id !== this.value) {
+                    node.plate_model = null;
+                }
+                draw_form()
+            });
+        } //oneditprepare()
     });
 </script>
 
@@ -27,17 +104,13 @@
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
-    <div class="form-row">
+    <div class="form-row" id="channel_section">
         <label for="node-input-channel"><i class="icon-tag"></i> Channel #</label>
         <select id="node-input-channel">
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>  
-            <option value="6">6</option>             
         </select>
+    </div>
+    <div class="form-row" id="invalid_plate_section">
+        <h2 color="red">Invalid plate selected</h2>
     </div>
 </script>
 

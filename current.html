@@ -14,6 +14,22 @@
         label: function () {
             return (this.name || this.channel);
         },
+        outputLabels: function(index) {
+            let current_labels = ['Iin1','Iin2','Iin3','Iin4','Iin5','Iin6','Iin7','Iin8'];
+            let node = this;
+            if (node.plate_model && node.channel) {
+                if (node.plate_model == "CURRENTplate") {
+                    let chan_index = parseInt(node.channel, 10) - 1;
+                    return(channel_labels[chan_index]);
+                } else if (node.plate_model == "ADCplate") {
+                    return(node.channel);
+                } else {
+                    return('');
+                }
+            } else {
+                return('');
+            }
+        },
         oneditprepare: function() {
             var node = this;
             node.prev_config_id = $("#node-input-config_plate").val();
@@ -21,6 +37,7 @@
 
             function draw_form() {
                 $("#channel_section").hide()
+                $("#invalid_plate_section").hide();
                 $("#node-input-channel").empty()
                 var config_id = $("#node-input-config_plate").val()
                 if (config_id == "_ADD_") {
@@ -31,18 +48,19 @@
 
                     if (node.plate_model == "CURRENTplate") {
                         var current_options = [
-                            {name: "Iin1", value: "Iin1"},
-                            {name: "Iin2", value: "Iin2"},
-                            {name: "Iin3", value: "Iin3"},
-                            {name: "Iin4", value: "Iin4"},
-                            {name: "Iin5", value: "Iin5"},
-                            {name: "Iin6", value: "Iin6"},
-                            {name: "Iin7", value: "Iin7"},
-                            {name: "Iin8", value: "Iin8"}
+                            {name: "Iin1", value: 1},
+                            {name: "Iin2", value: 2},
+                            {name: "Iin3", value: 3},
+                            {name: "Iin4", value: 4},
+                            {name: "Iin5", value: 5},
+                            {name: "Iin6", value: 6},
+                            {name: "Iin7", value: 7},
+                            {name: "Iin8", value: 8}
                          ];
-                         for (var i = 0; i < current_options.length; i++)
+                        for (var i = 0; i < current_options.length; i++)
                             $('#node-input-channel').append('<option value="' + current_options[i].value + '">' + current_options[i].name + '</option>');
 
+                        $("#channel_section").show()
                     } else if (node.plate_model == "ADCplate") {
                         var adc_options = [
                             {name: "I0", value: "I0"},
@@ -50,8 +68,14 @@
                             {name: "I2", value: "I2"},
                             {name: "I3", value: "I3"}
                         ];
-                         for (var i = 0; i < adc_options.length; i++)
+                        for (var i = 0; i < adc_options.length; i++)
                             $('#node-input-channel').append('<option value="' + adc_options[i].value + '">' + adc_options[i].name + '</option>');
+
+                        $("#channel_section").show()
+                    } else {
+                        $("#invalid_plate_section").show();
+                        $("#channel_section").hide();
+                        node.channel = null;
                     }
 
                     // search for current setting (if it exists) and select
@@ -59,7 +83,6 @@
                         $("#channel_section select").val(node.channel)
                     }
 
-                    $("#channel_section").show()
                 }
             }
 
@@ -87,6 +110,9 @@
         <label for="node-input-channel"><i class="icon-tag"></i> Channel #</label>
         <select id="node-input-channel">
         </select>
+    </div>
+    <div class="form-row" id="invalid_plate_section">
+        <h2 style="color: red">Invalid plate selected</h2>
     </div>
 </script>
 

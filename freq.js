@@ -2,7 +2,6 @@ module.exports = function (RED) {
     function FREQNode(config) {
         RED.nodes.createNode(this, config);
         this.plate = RED.nodes.getNode(config.config_plate).plate;
-        this.input = parseInt(config.input, 10);
         this.state = 0;
 
         var node = this;
