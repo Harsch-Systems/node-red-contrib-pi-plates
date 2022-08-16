@@ -25,21 +25,25 @@ module.exports = function (RED) {
                     let color = null;
                 }
 
-                switch(msg.payload) {
-                    case 'on':
+                switch (msg.payload) {
+                    case 'on': {
                         obj.cmd = 'setLED';
-                    break;
-                    case 'off':
+                        break;
+                    }
+                    case 'off': {
                         obj.cmd = 'clrLED';
-                    break;
-                    case 'toggle':
+                        break;
+                    }
+                    case 'toggle': {
                         obj.cmd = 'toggleLED';
-                    break;
-                    default:
+                        break;
+                    }
+                    default: {
                         if (color) {
                             obj.cmd = 'setLED';
                             obj.args.color = color;
                         }
+                    }
                 }
                 if (obj.cmd != '') {
                     node.plate.send(obj, (reply) => {

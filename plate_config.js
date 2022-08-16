@@ -59,25 +59,23 @@ module.exports = function (RED) {
                 this.error('incorrect plate specifier');
                 break;
             }
-            
-            plate_cn.plate.send({cmd: 'VERIFY', args: {}}, (reply) => {
-                if (reply.state == 0) {
-                    plate_cn.verified = true;
-                    plate_cn.plate.send({cmd: 'getID', args: {}}, (reply) => {
-                        plate_cn.ID = reply.ID;
-                    });
-                    plate_cn.plate.send({cmd: 'getHWrev', args: {}}, (reply) => {
-                        plate_cn.HWrev = reply.HWrev;
-                    });
-                    plate_cn.plate.send({cmd: 'getFWrev', args: {}}, (reply) => {
-                        plate_cn.FWrev = reply.FWrev;
-                    });
-                } else {
-                    plate_cn.verified = false;
-                }
-            });
-            // TODO need to add API for frontend to query plate details
         }
+        plate_cn.plate.send({cmd: 'VERIFY', args: {}}, (reply) => {
+            if (reply.state == 0) {
+                plate_cn.verified = true;
+                plate_cn.plate.send({cmd: 'getID', args: {}}, (reply) => {
+                    plate_cn.ID = reply.ID;
+                });
+                plate_cn.plate.send({cmd: 'getHWrev', args: {}}, (reply) => {
+                    plate_cn.HWrev = reply.HWrev;
+                });
+                plate_cn.plate.send({cmd: 'getFWrev', args: {}}, (reply) => {
+                    plate_cn.FWrev = reply.FWrev;
+                });
+            } else {
+                plate_cn.verified = false;
+            }
+        });
     }
     RED.nodes.registerType("pi_plate", PlateNode);
 }

@@ -16,7 +16,7 @@ module.exports = function (RED) {
             let cmd_string = "";
             if ((node.plate_model == "CURRENTplate") &&
                 typeof node.channel == "string") {
-                    channel_arg = parseInt(node.channel, 10);
+                channel_arg = parseInt(node.channel, 10);
                 if (node.channel > 0 && node.channel < 9) {
                     channelValid = true;
                     cmd_string = "getI";
