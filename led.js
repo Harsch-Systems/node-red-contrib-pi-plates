@@ -5,10 +5,9 @@ module.exports = function (RED) {
 
         var node = this;
         node.on('input', function (msg) {
+            let commands = ['on', 'off', 'toggle'];
             let colors = ['red', 'green', 'yellow', 'blue', 'magenta',
                           'cyan', 'white'];
-
-            let commands = ['on', 'off', 'toggle'];
 
             let inputValid = (typeof msg.payload === 'string' &&
                               commands.includes(msg.payload) ||
@@ -17,12 +16,9 @@ module.exports = function (RED) {
             if (!node.plate.plate_status && inputValid) {
                 const obj = { cmd: '', args: {} };
 
-                let colors = ['red', 'green', 'yellow', 'blue', 'magenta',
-                              'cyan', 'white'];
+                let color = null;
                 if (colors.includes(msg.payload)) {
-                    let color = msg.payload;
-                } else {
-                    let color = null;
+                    color = msg.payload;
                 }
 
                 switch (msg.payload) {
