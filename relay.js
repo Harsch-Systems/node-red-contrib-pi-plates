@@ -29,9 +29,10 @@ module.exports = function (RED) {
                 node.plate.send(obj, (reply) => {
                     if (reply.state != node.state) {
                         node.state = reply.state
-                        send({payload: node.state});
+                        node.status({text: node.state});
                     }
-                    node.status({text: node.state});
+                    msg.payload = node.state;
+                    send(msg);
                 });
             } else if (node.plate.plate_status == 1) {
                 node.status({fill: "red", shape: "ring", text: "invalid plate"});
