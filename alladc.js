@@ -13,7 +13,7 @@ module.exports = function (RED) {
         }
 
         var node = this;
-        node.on('input', function (msg) {
+        node.on('input', function (msg, send, done) {
             /* DAQC/DAQC2 have 8+1(5VDC) ADC inputs, TINKER has 4, ADC has 16 */
 
             if (!node.plate.plate_status) {
@@ -24,19 +24,22 @@ module.exports = function (RED) {
                     }
 
                     node.status({text: reply.voltages});
-                    node.send(node.outputs);
+                    send(node.outputs);
                 });
-            }else if (node.plate.plate_status == 1) {
+            } else if (node.plate.plate_status == 1) {
                 node.status({fill: "red", shape: "ring", text: "invalid plate"});
                 node.log("invalid plate");
 
                 node.plate.update_status();
-            }else if (node.plate.plate_status == 2) {
+            } else if (node.plate.plate_status == 2) {
                 node.status({fill: "red", shape: "ring", text: "missing python dependencies"});
                 node.log("missing python dependencies");
-            }else if (node.plate.plate_status == 3) {
+            } else if (node.plate.plate_status == 3) {
                 node.status({fill: "red", shape: "ring", text: "python process error"});
                 node.log("python process error");
+            }
+            if (done) {
+                done();
             }
         });
 

@@ -6,7 +6,7 @@ module.exports = function (RED) {
         this.state = "UNKNOWN";
 
         var node = this;
-        node.on('input', function (msg) {
+        node.on('input', function (msg, send, done) {
             let type = RED.nodes.getNode(config.config_plate).model;
             /*
             let validInputs = ["start", "stop", "speed"];
@@ -27,17 +27,17 @@ module.exports = function (RED) {
 
                 if (Object.keys(obj).includes('cmd')) {
                     node.plate.send(obj, (reply) => {});
+                        if (reply.state != node.state) {
+                            node.state = reply.state
+                            node.status({text: node.state});
+                            node.send({payload: node.state});
+                        }
+                        msg.payload = node.state;
+                        send(msg);
                 } else {
                     node.log("malformed obj, missing 'cmd'");
                 }
 
-                /*
-                    if (reply.state != node.state) {
-                        node.state = reply.state
-                        node.send({payload: node.state});
-                    }
-                    node.status({text: node.state});
-            */
             } else if (node.plate.plate_status == 1) {
                 node.status({fill: "red", shape: "ring", text: "invalid plate"});
                 node.log("invalid plate");
@@ -55,6 +55,9 @@ module.exports = function (RED) {
             } else if (!inputValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid input"});
                 node.log("invalid input");
+            }
+            if (done) {
+                done();
             }
         });
     }

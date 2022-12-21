@@ -8,7 +8,7 @@ module.exports = function (RED) {
         this.milliamps = 0;
 
         var node = this;
-        node.on('input', function (msg) {
+        node.on('input', function (msg, send, done) {
             /* Valid CURRENTplate channels are 1 through 8 */
             /* Valid ADCplate channels are I0 through I3 */
             let channelValid = false;
@@ -35,7 +35,8 @@ module.exports = function (RED) {
                 node.plate.send(obj, (reply) => {
                     node.milliamps = reply.milliamps;
                     node.status({text: node.milliamps + ' mA'});
-                    node.send({payload: node.milliamps});
+                    msg.payload = node.milliamps;
+                    send(msg);
                 });
             } else if (node.plate.plate_status == 1) {
                 node.status({fill: "red", shape: "ring", text: "invalid plate"});
@@ -50,6 +51,9 @@ module.exports = function (RED) {
             } else if (!channelValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid channel"});
                 node.log("invalid channel");
+            }
+            if (done) {
+                done();
             }
         });
 

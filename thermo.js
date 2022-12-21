@@ -6,7 +6,7 @@ module.exports = function (RED) {
         this.temperature = 0;
 
         var node = this;
-        node.on('input', function (msg) {
+        node.on('input', function (msg, send, done) {
             let type = RED.nodes.getNode(config.config_plate).model;
             let channelValid = (type == "THERMOplate");
 
@@ -16,7 +16,8 @@ module.exports = function (RED) {
                 node.plate.send(obj, (reply) => {
                     node.temperature = reply.value;
                     node.status({text: node.temperature});
-                    node.send({payload: node.temperature});
+                    msg.payload = node.temperature;
+                    send(msg);
                 });
             } else if (node.plate.plate_status == 1) {
                 node.status({fill: "red", shape: "ring", text: "invalid plate"});
@@ -32,6 +33,9 @@ module.exports = function (RED) {
             } else if (!channelValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid plate type"});
                 node.log("invalid plate type");
+            }
+            if (done) {
+                done();
             }
         });
 
