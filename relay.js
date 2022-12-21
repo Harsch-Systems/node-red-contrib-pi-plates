@@ -8,7 +8,7 @@ module.exports = function (RED) {
         this.state = "UNKNOWN";
 
         var node = this;
-        node.on('input', function (msg) {
+        node.on('input', function (msg, send, done) {
             let type = RED.nodes.getNode(config.config_plate).model;
             let relayValid = (type == "RELAYplate2" && node.relay <= 8 ||
                               type == "RELAYplate" && node.relay < 8 ||
@@ -29,7 +29,7 @@ module.exports = function (RED) {
                 node.plate.send(obj, (reply) => {
                     if (reply.state != node.state) {
                         node.state = reply.state
-                        node.send({payload: node.state});
+                        send({payload: node.state});
                     }
                     node.status({text: node.state});
                 });
@@ -50,6 +50,9 @@ module.exports = function (RED) {
             } else if (!inputValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid input"});
                 node.log("invalid input");
+            }
+            if (done) {
+                done();
             }
         });
     }
