@@ -14,7 +14,7 @@ module.exports = function (RED) {
                               type == "RELAYplate" && node.relay < 8 ||
                               type == "TINKERplate" && node.relay < 3);
 
-            let validInputs = ["on", "off", "toggle"];
+            let validInputs = ["on", "off", "toggle", "state"];
             let inputValid = (typeof msg.payload === 'string' && validInputs.includes(msg.payload));
 
             if (!node.plate.plate_status && relayValid && inputValid) {
@@ -25,6 +25,8 @@ module.exports = function (RED) {
                     obj['cmd'] = "relayOFF";
                 } else if (msg.payload == "toggle") {
                     obj['cmd'] = "relayTOGGLE";
+                } else if (msg.payload == "state") {
+                    obj['cmd'] = "relaySTATE";
                 }
                 node.plate.send(obj, (reply) => {
                     if (reply.state != node.state) {
