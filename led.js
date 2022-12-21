@@ -4,7 +4,7 @@ module.exports = function (RED) {
         this.plate = RED.nodes.getNode(config.config_plate).plate;
 
         var node = this;
-        node.on('input', function (msg) {
+        node.on('input', function (msg, send, done) {
             let commands = ['on', 'off', 'toggle'];
             let colors = ['red', 'green', 'yellow', 'blue', 'magenta',
                           'cyan', 'white'];
@@ -43,9 +43,10 @@ module.exports = function (RED) {
                 }
                 if (obj.cmd != '') {
                     node.plate.send(obj, (reply) => {
-                        node.state = reply.state
+                        node.state = reply.state;
                         node.status({ text: node.state });
-                        node.send({ payload: node.state });
+                        msg.payload = node.state;
+                        send(msg);
                     });
                 }
             } else if (node.plate.plate_status == 1) {
@@ -61,6 +62,9 @@ module.exports = function (RED) {
             } else if (!inputValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid input"});
                 node.log("invalid input");
+            }
+            if (done) {
+                done();
             }
         });
 
