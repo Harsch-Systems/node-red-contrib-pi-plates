@@ -11,14 +11,19 @@ module.exports = function (RED) {
         //}
 
         var node = this;
-        node.on('input', function (msg) {
+        node.on('input', function (msg, send, done) {
             let type = RED.nodes.getNode(config.config_plate).model;
-            let channelValid = (((type == "DAQCplate") && (node.channel < 2)) || ((type == "DAQC2plate") && (node.channel < 2)) ||
-              ((type == "TINKERplate") && (node.channel > 0)));
+
+            let channelValid = ((type == "DAQCplate") && (node.channel < 2))
+                            || ((type == "DAQC2plate") && (node.channel < 2))
+                            || ((type == "TINKERplate") && (node.channel > 0) && (node.channel < 7));
+
             let inputValid = (typeof msg.payload === 'number' && msg.payload >= 0 && msg.payload <= 100);
+
             if ((type == "DAQCplate") && inputValid) {
                 msg.payload = parseInt((msg.payload * 1023.0 / 100.0) + 0.5);
             }
+
             if (type == "TINKERplate") {
                 if (channelValid) {
                     const conf = {cmd: "setPWMmode", args: {bit: node.channel}};
@@ -34,12 +39,12 @@ module.exports = function (RED) {
                 node.plate.send(obj, (reply) => {
                     node.value = reply.value;
                     node.status({text: node.value});
-                    node.send({payload: node.value});
+                    msg.payload = node.value;
+                    send(msg);
                 });
             } else if (node.plate.plate_status == 1) {
                 node.status({fill: "red", shape: "ring", text: "invalid plate"});
                 node.log("invalid plate");
-
                 node.plate.update_status();
             } else if (node.plate.plate_status == 2) {
                 node.status({fill: "red", shape: "ring", text: "missing python dependencies"});
@@ -53,6 +58,9 @@ module.exports = function (RED) {
             } else if (!inputValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid PWM value: ignoring"});
                 node.log("invalid PWM value: ignoring");
+            }
+            if (done) {
+                done();
             }
         });
 

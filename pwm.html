@@ -17,7 +17,7 @@
         },
         outputLabels: function(index) {
             let daqc_labels = ['PWM0', 'PWM1'];
-            let tinker_labels = ['DIO1','DIO2','DIO3','DIO4','DIO5','DIO6','DIO7','DIO8'];
+            let tinker_labels = ['DIO1','DIO2','DIO3','DIO4','DIO5','DIO6'];
             let node = this;
             if (node.plate_model && node.channel) {
                 let chan_index = parseInt(node.channel, 10);
@@ -64,9 +64,7 @@
                             {name: "DIO3", value: 3},
                             {name: "DIO4", value: 4},
                             {name: "DIO5", value: 5},
-                            {name: "DIO6", value: 6},
-                            {name: "DIO7", value: 7},
-                            {name: "DIO8", value: 8}
+                            {name: "DIO6", value: 6}
                         ];
                         for (var i = 0; i < tink_options.length; i++)
                             $('#node-input-channel').append('<option value="' + tink_options[i].value + '">' + tink_options[i].name + '</option>');
