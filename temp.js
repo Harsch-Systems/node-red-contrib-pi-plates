@@ -15,19 +15,20 @@ module.exports = function (RED) {
             if (channelValid) {
                 const conf = {cmd: "setTEMP", args: {bit: node.input}};
                 node.plate.send(conf, (reply) => {});
-            }else {
+            } else {
                 node.status({fill: "red", shape: "ring", text: "invalid channel"});
                 node.log("invalid channel");
             }
         }
 
-        node.on('input', function (msg) {
+        node.on('input', function (msg, send, done) {
             if (!node.plate.plate_status && channelValid) {
                 const obj = {cmd: "getTEMP", args: {bit: node.input, scale: node.scale}};
                 node.plate.send(obj, (reply) => {
                     node.temp = reply.temp;
                     node.status({text: node.temp});
-                    node.send({payload: node.temp});
+                    msg.payload = node.temp;
+                    send(msg);
                 });
             } else if (node.plate.plate_status == 1) {
                 node.status({fill: "red", shape: "ring", text: "invalid plate"});
@@ -43,6 +44,9 @@ module.exports = function (RED) {
             } else if (!channelValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid channel"});
                 node.log("invalid channel");
+            }
+            if (done) {
+                done();
             }
         });
 
