@@ -10,7 +10,7 @@ module.exports = function (RED) {
         }
 
         var node = this;
-        node.on('input', function (msg) {
+        node.on('input', function (msg, send, done) {
             let type = RED.nodes.getNode(config.config_plate).model;
             let channelValid = type == "DAQCplate" && node.output < 7 ||
               type == "DAQC2plate" && node.output < 8 ||
@@ -29,9 +29,10 @@ module.exports = function (RED) {
                     obj['cmd'] = "toggleDOUTbit";
                 }
                 node.plate.send(obj, (reply) => {
-                    node.state = reply.state
+                    node.state = reply.state;
                     node.status({text: node.state});
-                    node.send({payload: node.state});
+                    msg.payload = node.state;
+                    send(msg);
                 });
             } else if (node.plate.plate_status == 1) {
                 node.status({fill: "red", shape: "ring", text: "invalid plate"});
@@ -50,6 +51,9 @@ module.exports = function (RED) {
             } else if (!inputValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid input"});
                 node.log("invalid input");
+            }
+            if (done) {
+                done();
             }
         });
 
