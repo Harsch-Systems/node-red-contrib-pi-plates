@@ -12,7 +12,7 @@ module.exports = function (RED) {
             node.plate.send(conf, (reply) => {});
         }
 
-        node.on('input', function (msg) {
+        node.on('input', function (msg, send, done) {
             let type = RED.nodes.getNode(config.config_plate).model;
             let channelValid = false;
             let cmd_str = "getDINbit";
@@ -41,9 +41,10 @@ module.exports = function (RED) {
             if (!node.plate.plate_status && channelValid) {
                 const obj = {cmd: cmd_str, args: {bit: node.input}};
                 node.plate.send(obj, (reply) => {
-                    node.state = reply.state
+                    node.state = reply.state;
                     node.status({text: node.state});
-                    node.send({payload: node.state});
+                    msg.payload = node.state;
+                    send(msg);
                 });
             } else if (node.plate.plate_status == 1) {
                 node.status({fill: "red", shape: "ring", text: "invalid plate"});
@@ -59,6 +60,9 @@ module.exports = function (RED) {
             } else if (!channelValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid channel"});
                 node.log("invalid channel");
+            }
+            if (done) {
+                done();
             }
         });
 
