@@ -19,7 +19,7 @@ module.exports = function (RED) {
             node.plate.send(conf, (reply) => {});
         }
 
-        node.on('input', function (msg) {
+        node.on('input', function (msg, send, done) {
             let type = RED.nodes.getNode(config.config_plate).model;
 
             /* Valid DAQC/DAQC2 channels are 0 through 8.  Valid TINKER channels are 1 through 4 */
@@ -33,7 +33,8 @@ module.exports = function (RED) {
                 node.plate.send(obj, (reply) => {
                     node.voltage = reply.voltage
                     node.status({text: node.voltage});
-                    node.send({payload: node.voltage});
+                    msg.payload = node.voltage;
+                    send(msg);
                 });
             } else if (node.plate.plate_status == 1) {
                 node.status({fill: "red", shape: "ring", text: "invalid plate"});
@@ -49,6 +50,9 @@ module.exports = function (RED) {
             } else if (!channelValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid channel"});
                 node.log("invalid channel");
+            }
+            if (done) {
+                done();
             }
         });
 
