@@ -4,10 +4,10 @@
         color: '#87A980',
         defaults: {
             config_plate: { value: '', type: "pi_plate"},
-            name: { value: ''}
+            name: { value: ''},
+            outputs: { value: 0 } // to be set dynamically by adapt_node()
         },
         inputs: 1,
-        outputs: 1,
         icon: 'analog.png',
         paletteLabel: 'allADC',
         label: function () {
