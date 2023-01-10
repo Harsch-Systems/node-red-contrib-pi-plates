@@ -30,10 +30,8 @@
 </script>
 
 <script type="text/x-red" data-help-name="ppLED">
-    <p>Control an LED on a DAQCplate, DAQC2plate, RELAYplate or THERMOplate. The ppLED
-    node accepts a string input. For all plate types, 'off' will turn the LED off. When
-    used with a RELAYplate or THERMOplate, any other value will turn the LED on. The
-    DAQCplate accepts 'red', 'green' or 'yellow' to turn on the red, green or both LEDs
-    respectively. The DAQC2plate accepts 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan'
-    and 'white'.</p>
+    <p>Control onboard LED(s) for various Pi-Plates.  The node accepts the following input
+    strings: 'on', 'off', 'toggle'.  DAQC accepts 'red', 'green', or 'yellow',
+    DAQC2 accepts 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', and 'white'.
+    other string input is interpreted as 'on', non-string input is invalid.</p>
 </script>
