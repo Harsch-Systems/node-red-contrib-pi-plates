@@ -5,7 +5,7 @@ module.exports = function (RED) {
         this.plate = this.config_node.plate;
         this.plate_model = this.config_node.model
         if (this.plate_model == "DAQCplate" || this.plate_model == "DAQC2plate") {
-            this.outputs = new Array(9);
+            this.outputs = new Array(8);
         } else if (this.plate_model == "TINKERplate") {
             this.outputs = new Array(4);
         } else if (this.plate_model == "ADCplate") {
@@ -22,8 +22,6 @@ module.exports = function (RED) {
                     for (let i = 0; i < reply.voltages.length; i++) {
                         node.outputs[i] = { payload: reply.voltages[i] };
                     }
-
-                    node.status({text: reply.voltages});
                     send(node.outputs);
                 });
             } else if (node.plate.plate_status == 1) {
