@@ -8,32 +8,26 @@ module.exports = function (RED) {
         var node = this;
         node.on('input', function (msg, send, done) {
             let type = RED.nodes.getNode(config.config_plate).model;
-            /*
-            let validInputs = ["start", "stop", "speed"];
+            let validInputs = ["start", "stop"];
             let inputValid = (typeof msg.payload === 'string' && validInputs.includes(msg.payload) ||
-                typeof msg.payload === 'object');
-            */
-            //  if (!node.plate.plate_status && relayValid && inputValid){
-            if (true) {
+                typeof msg.payload === 'object' && Object.keys(msg.payload).includes("speed"));
+
+            if (!node.plate.plate_status && inputValid) {
                 const obj = {args: {motor: node.motor}};
                 if (msg.payload == "start") {
                     obj['cmd'] = "dcSTART";
                 } else if (msg.payload == "stop") {
                     obj['cmd'] = "dcSTOP";
-                } else if (typeof msg.payload === 'object' && Object.keys(msg.payload).includes("speed")) {
+                } else if (typeof msg.payload === 'object') {
                     obj['cmd'] = "dcSPEED";
                     obj['args'].speed = msg.payload.speed;
                 }
 
                 if (Object.keys(obj).includes('cmd')) {
-                    node.plate.send(obj, (reply) => {});
-                        if (reply.state != node.state) {
-                            node.state = reply.state
-                            node.status({text: node.state});
-                            node.send({payload: node.state});
-                        }
-                        msg.payload = node.state;
-                        send(msg);
+                    node.plate.send(obj, (reply) => {
+                        node.state = reply.state
+                        node.status({text: node.state});
+                    });
                 } else {
                     node.log("malformed obj, missing 'cmd'");
                 }
@@ -49,9 +43,6 @@ module.exports = function (RED) {
             } else if (node.plate.plate_status == 3) {
                 node.status({fill: "red", shape: "ring", text: "python process error"});
                 node.log("python process error");
-            } else if (!relayValid) {
-                node.status({fill: "red", shape: "ring", text: "invalid relay"});
-                node.log("invalid relay");
             } else if (!inputValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid input"});
                 node.log("invalid input");
