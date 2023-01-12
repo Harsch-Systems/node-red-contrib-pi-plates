@@ -4,6 +4,11 @@ module.exports = function (RED) {
         this.plate = RED.nodes.getNode(config.config_plate).plate;
         this.channel = parseInt(config.channel, 10);
         this.temperature = 0;
+        if (config.scale) {
+            this.scale = config.scale;
+        } else {
+            this.scale = 'c';
+        }
 
         var node = this;
         node.on('input', function (msg, send, done) {
@@ -12,7 +17,7 @@ module.exports = function (RED) {
 
             if (!node.plate.plate_status && channelValid) {
                 const cmd = node.channel==0 ? 'getCOLD' : 'getTEMP';
-                const obj = {cmd: cmd, args: {channel: node.channel}};
+                const obj = {cmd: cmd, args: {channel: node.channel, scale: node.scale}};
                 node.plate.send(obj, (reply) => {
                     node.temperature = reply.value;
                     node.status({text: node.temperature});

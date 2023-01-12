@@ -5,7 +5,8 @@
         defaults: {
             config_plate: { value: '', type: "pi_plate"},
             name: { value: ''},
-            channel: { value: "1", required: true}
+            channel: { value: "1", required: true},
+            scale: { value: 'c'}
         },
         inputs: 1,
         outputs: 1,
@@ -90,6 +91,14 @@
             <option value="11">DS11</option>
             <option value="12">DS12</option>
             <option value="0">COLD</option>
+        </select>
+    </div>
+    <div class="form-row" id="scale_section">
+        <label for="node-input-scale"><i class="icon-tag"></i> Temperature Scale</label>
+        <select id="node-input-scale">
+            <option value="c">Celcius</option>
+            <option value="f">Fahrenheit</option>
+            <option value="k">Kelvin</option>
         </select>
     </div>
     <div class="form-row" id="invalid_plate_section">
