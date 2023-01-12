@@ -16,17 +16,16 @@
             return (this.name || 'TEMP' + this.input);
         },
         outputLabels: function(index) {
-            let thermo_labels = ['Input 9','Input 10','Input 11','Input 12'];
             let tinker_labels = ['DIO1','DIO2','DIO3','DIO4','DIO5','DIO6','DIO7','DIO8'];
+            let daqc_labels = ['Input 0','Input 1','Input 2','Input 3','Input 4','Input 5','Input 6','Input 7'];
             let node = this;
             if (node.plate_model && node.input) {
                 let input_index = parseInt(node.input, 10);
                 if (node.plate_model == "TINKERplate") {
                     input_index -= 1;
                     return(tinker_labels[input_index]);
-                } else if (node.plate_model == "THERMOplate") {
-                    input_index -= 9;
-                    return(thermo_labels[input_index]);
+                } else if (node.plate_model == "DAQCplate") {
+                    return(daqc_labels[input_index]);
                 } else {
                     return('');
                 }
@@ -50,15 +49,19 @@
                     node.config_node = RED.nodes.node(config_id)
                     node.plate_model = node.config_node.model;
 
-                    if (node.plate_model  == "THERMOplate") {
-                        var thermo_options= [
-                            {name: "Input 9", value: 9},
-                            {name: "Input 10", value: 10},
-                            {name: "Input 11", value: 11},
-                            {name: "Input 12", value: 12}
+                    if (node.plate_model  == "DAQCplate") {
+                        var daqc_options = [
+                            {name: "Input 0", value: 0},
+                            {name: "Input 1", value: 1},
+                            {name: "Input 2", value: 2},
+                            {name: "Input 3", value: 3},
+                            {name: "Input 4", value: 4},
+                            {name: "Input 5", value: 5},
+                            {name: "Input 6", value: 6},
+                            {name: "Input 7", value: 7},
                         ]
-                        for (var i = 0; i < thermo_options.length; i++)
-                            $('#node-input-input').append('<option value="' + thermo_options[i].value + '">' + thermo_options[i].name + '</option>');
+                        for (var i = 0; i < daqc_options.length; i++)
+                            $('#node-input-input').append('<option value="' + daqc_options[i].value + '">' + daqc_options[i].name + '</option>');
                         $("#input_section").show()
 
                     } else if (node.plate_model == "TINKERplate") {
@@ -124,5 +127,6 @@
 </script>
 
 <script type="text/x-red" data-help-name="ppTEMP">
-    <p>DS18X20 1-wire sensor hooked to digital input.  Returns temperature in specified scale</p>
+    <p>DS18X20 1-wire sensor hooked to digital input.  Returns measured temperature in specified scale.</p>
+    <p>Supported Pi-Plates are DAQCplate and TINKERplate.  For THERMOplate, use THERMO node.</p>
 </script>
