@@ -1,0 +1,108 @@
+[
+    {
+        "id": "dfb4342a33765239",
+        "type": "inject",
+        "z": "5732f930dfdfaa93",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "on",
+        "payloadType": "str",
+        "x": 110,
+        "y": 1120,
+        "wires": [
+            [
+                "131ea317b02020f8"
+            ]
+        ]
+    },
+    {
+        "id": "6d21c934f6651e7d",
+        "type": "inject",
+        "z": "5732f930dfdfaa93",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "off",
+        "payloadType": "str",
+        "x": 110,
+        "y": 1160,
+        "wires": [
+            [
+                "131ea317b02020f8"
+            ]
+        ]
+    },
+    {
+        "id": "7b1eafa79f37b073",
+        "type": "inject",
+        "z": "5732f930dfdfaa93",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "toggle",
+        "payloadType": "str",
+        "x": 110,
+        "y": 1200,
+        "wires": [
+            [
+                "131ea317b02020f8"
+            ]
+        ]
+    },
+    {
+        "id": "131ea317b02020f8",
+        "type": "ppLED",
+        "z": "5732f930dfdfaa93",
+        "config_plate": "c8015730b6070de0",
+        "name": "",
+        "output": "0",
+        "x": 310,
+        "y": 1160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c8015730b6070de0",
+        "type": "pi_plate",
+        "model": "RELAYplate",
+        "address": "1"
+    }
+]

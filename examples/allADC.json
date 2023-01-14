@@ -1,0 +1,57 @@
+[
+    {
+        "id": "086ffa3810071b3e",
+        "type": "ppAllADC",
+        "z": "5732f930dfdfaa93",
+        "config_plate": "f78466572d928687",
+        "name": "",
+        "outputs": 8,
+        "x": 310,
+        "y": 340,
+        "wires": [
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "bce57c4093b29acd",
+        "type": "inject",
+        "z": "5732f930dfdfaa93",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 340,
+        "wires": [
+            [
+                "086ffa3810071b3e"
+            ]
+        ]
+    },
+    {
+        "id": "f78466572d928687",
+        "type": "pi_plate",
+        "model": "DAQCplate",
+        "address": "0"
+    }
+]

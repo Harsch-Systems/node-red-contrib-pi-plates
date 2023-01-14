@@ -1,0 +1,108 @@
+[
+    {
+        "id": "bbbc1a343cc70634",
+        "type": "ppDOUT",
+        "z": "5732f930dfdfaa93",
+        "config_plate": "f78466572d928687",
+        "name": "",
+        "output": "0",
+        "x": 320,
+        "y": 940,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9686119880ccb7f8",
+        "type": "inject",
+        "z": "5732f930dfdfaa93",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "on",
+        "payloadType": "str",
+        "x": 110,
+        "y": 900,
+        "wires": [
+            [
+                "bbbc1a343cc70634"
+            ]
+        ]
+    },
+    {
+        "id": "49d09a122cfc560a",
+        "type": "inject",
+        "z": "5732f930dfdfaa93",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "off",
+        "payloadType": "str",
+        "x": 110,
+        "y": 940,
+        "wires": [
+            [
+                "bbbc1a343cc70634"
+            ]
+        ]
+    },
+    {
+        "id": "b7fc14b284e0e429",
+        "type": "inject",
+        "z": "5732f930dfdfaa93",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "toggle",
+        "payloadType": "str",
+        "x": 110,
+        "y": 980,
+        "wires": [
+            [
+                "bbbc1a343cc70634"
+            ]
+        ]
+    },
+    {
+        "id": "f78466572d928687",
+        "type": "pi_plate",
+        "model": "DAQCplate",
+        "address": "0"
+    }
+]

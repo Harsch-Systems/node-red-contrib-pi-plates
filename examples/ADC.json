@@ -1,0 +1,50 @@
+[
+    {
+        "id": "7f25af5c6f3197c8",
+        "type": "ppADC",
+        "z": "5732f930dfdfaa93",
+        "config_plate": "f78466572d928687",
+        "name": "",
+        "channel": "2",
+        "x": 310,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "97cd36c682db8927",
+        "type": "inject",
+        "z": "5732f930dfdfaa93",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 220,
+        "wires": [
+            [
+                "7f25af5c6f3197c8"
+            ]
+        ]
+    },
+    {
+        "id": "f78466572d928687",
+        "type": "pi_plate",
+        "model": "DAQCplate",
+        "address": "0"
+    }
+]

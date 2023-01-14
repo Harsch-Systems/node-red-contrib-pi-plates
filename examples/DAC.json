@@ -1,0 +1,137 @@
+[
+    {
+        "id": "39fa6739ab6a7713",
+        "type": "ppDAC",
+        "z": "5732f930dfdfaa93",
+        "config_plate": "f78466572d928687",
+        "name": "",
+        "channel": "0",
+        "x": 310,
+        "y": 680,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "059a81fd3ac86365",
+        "type": "inject",
+        "z": "5732f930dfdfaa93",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "3.3",
+        "payloadType": "num",
+        "x": 110,
+        "y": 740,
+        "wires": [
+            [
+                "39fa6739ab6a7713"
+            ]
+        ]
+    },
+    {
+        "id": "60f06a427a89386c",
+        "type": "inject",
+        "z": "5732f930dfdfaa93",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "1.2",
+        "payloadType": "num",
+        "x": 110,
+        "y": 700,
+        "wires": [
+            [
+                "39fa6739ab6a7713"
+            ]
+        ]
+    },
+    {
+        "id": "0beecd0e428675d5",
+        "type": "inject",
+        "z": "5732f930dfdfaa93",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "0",
+        "payloadType": "num",
+        "x": 110,
+        "y": 660,
+        "wires": [
+            [
+                "39fa6739ab6a7713"
+            ]
+        ]
+    },
+    {
+        "id": "6fc4f08b236a2da9",
+        "type": "inject",
+        "z": "5732f930dfdfaa93",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "4.095",
+        "payloadType": "num",
+        "x": 110,
+        "y": 780,
+        "wires": [
+            [
+                "39fa6739ab6a7713"
+            ]
+        ]
+    },
+    {
+        "id": "f78466572d928687",
+        "type": "pi_plate",
+        "model": "DAQCplate",
+        "address": "0"
+    }
+]

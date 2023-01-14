@@ -1,0 +1,49 @@
+[
+    {
+        "id": "0e7924eb8506c367",
+        "type": "ppFREQ",
+        "z": "5732f930dfdfaa93",
+        "config_plate": "81d736e8d2d36b35",
+        "name": "",
+        "x": 310,
+        "y": 1040,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "cfa083ff2b9beb4b",
+        "type": "inject",
+        "z": "5732f930dfdfaa93",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 1040,
+        "wires": [
+            [
+                "0e7924eb8506c367"
+            ]
+        ]
+    },
+    {
+        "id": "81d736e8d2d36b35",
+        "type": "pi_plate",
+        "model": "DAQC2plate",
+        "address": "3"
+    }
+]

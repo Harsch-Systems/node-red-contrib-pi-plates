@@ -1,0 +1,51 @@
+[
+    {
+        "id": "ce18ca9249cb7499",
+        "type": "ppTHERMO",
+        "z": "5732f930dfdfaa93",
+        "config_plate": "863d9859bd74f81d",
+        "name": "",
+        "channel": "4",
+        "scale": "c",
+        "x": 330,
+        "y": 1380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e5faefbad9efbbcb",
+        "type": "inject",
+        "z": "5732f930dfdfaa93",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 1380,
+        "wires": [
+            [
+                "ce18ca9249cb7499"
+            ]
+        ]
+    },
+    {
+        "id": "863d9859bd74f81d",
+        "type": "pi_plate",
+        "model": "THERMOplate",
+        "address": "2"
+    }
+]

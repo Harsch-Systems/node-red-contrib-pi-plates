@@ -1,0 +1,135 @@
+[
+    {
+        "id": "be651765b37340ad",
+        "type": "ppMotor",
+        "z": "5732f930dfdfaa93",
+        "config_plate": "c5456ad20a19cae2",
+        "name": "",
+        "motor": "1",
+        "x": 340,
+        "y": 1680,
+        "wires": []
+    },
+    {
+        "id": "e6613a0bde958674",
+        "type": "inject",
+        "z": "5732f930dfdfaa93",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "start",
+        "payloadType": "str",
+        "x": 110,
+        "y": 1640,
+        "wires": [
+            [
+                "be651765b37340ad"
+            ]
+        ]
+    },
+    {
+        "id": "e4370e119c8dfcd4",
+        "type": "inject",
+        "z": "5732f930dfdfaa93",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "stop",
+        "payloadType": "str",
+        "x": 110,
+        "y": 1680,
+        "wires": [
+            [
+                "be651765b37340ad"
+            ]
+        ]
+    },
+    {
+        "id": "541970273e95e37c",
+        "type": "inject",
+        "z": "5732f930dfdfaa93",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"speed\": 50}",
+        "payloadType": "json",
+        "x": 130,
+        "y": 1720,
+        "wires": [
+            [
+                "be651765b37340ad"
+            ]
+        ]
+    },
+    {
+        "id": "a506840055702ff3",
+        "type": "inject",
+        "z": "5732f930dfdfaa93",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"speed\": 100}",
+        "payloadType": "json",
+        "x": 130,
+        "y": 1760,
+        "wires": [
+            [
+                "be651765b37340ad"
+            ]
+        ]
+    },
+    {
+        "id": "c5456ad20a19cae2",
+        "type": "pi_plate",
+        "model": "MOTORplate",
+        "address": "4"
+    }
+]
