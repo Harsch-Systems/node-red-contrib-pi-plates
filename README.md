@@ -9,6 +9,10 @@ communication with <a href="https://pi-plates.com">Pi-Plates</a> boards.
  - DAQCplate
  - DAQC2plate
  - TINKERplate
+ - MOTORplate
+ - ADCplate
+ - CURRENTplate
+ - DIGIplate
 
 Install
 -------
