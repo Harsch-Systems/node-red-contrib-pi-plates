@@ -10,6 +10,19 @@ module.exports = function (RED) {
             this.scale = 'c';
         }
 
+        if (config.tc_type) {
+            this.tc_type = config.tc_type;
+        } else {
+            this.tc_type = 'k';
+        }
+
+        if (this.channel >= 1 && this.channel <= 8 && this.tc_type == 'j') {
+            let typeobj = {cmd: 'setTYPE', args: {channel: this.channel, tc_type: this.tc_type}};
+            this.plate.send(typeobj, (reply) => {
+                // thermocouple set to J-type
+            });
+        }
+
         var node = this;
         node.on('input', function (msg, send, done) {
             let type = RED.nodes.getNode(config.config_plate).model;

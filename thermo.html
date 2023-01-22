@@ -3,10 +3,11 @@
         category: 'Pi_Plates',
         color: '#87A980',
         defaults: {
-            config_plate: { value: '', type: "pi_plate"},
-            name: { value: ''},
-            channel: { value: "1", required: true},
-            scale: { value: 'c'}
+            config_plate: { value: '', type: "pi_plate" },
+            name: { value: '' },
+            channel: { value: "1", required: true },
+            scale: { value: 'c' },
+            tc_type: { value: 'k' }
         },
         inputs: 1,
         outputs: 1,
@@ -45,13 +46,20 @@
                     node.plate_model = node.config_node.model;
                    if (node.plate_model == "THERMOplate") {
                         $("#channel_section").show()
+                        $("#tc_type_section").show()
                    } else {
                         $("#invalid_plate_section").show();
                         $("#channel_section").hide();
+                        $("#tc_type_section").hide()
                         node.input = null;
                     }
                     if (node.channel) {
                         $("#channel_section select").val(node.channel);
+                        if (node.channel > 8) {
+                            $("#tc_type_section").hide()
+                        } else {
+                            $("#tc_type_section").show()
+                        }
                     }
                 }
             } // draw_form()
@@ -61,6 +69,16 @@
                     node.plate_model = null;
                 }
                 draw_form()
+            });
+            $("#node-input-channel").change(function () {
+                // Thermocouple type only applies to TC1 through TC8
+                let new_channel = $('#node-input-channel').val();
+                if (new_channel > 8) {
+                    $("#tc_type_section").hide()
+                } else {
+                    $("#tc_type_section").show()
+                }
+                // draw_form()
             });
         } // oneditprepare()
     });
@@ -99,6 +117,13 @@
             <option value="c">Celcius</option>
             <option value="f">Fahrenheit</option>
             <option value="k">Kelvin</option>
+        </select>
+    </div>
+    <div class="form-row" id="tc_type_section">
+        <label for="node-input-tc_type"><i class="icon-tag"></i> Thermocouple Type</label>
+        <select id="node-input-tc_type">
+            <option value="k">K-type</option>
+            <option value="j">J-type</option>
         </select>
     </div>
     <div class="form-row" id="invalid_plate_section">
