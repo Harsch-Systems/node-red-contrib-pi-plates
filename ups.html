@@ -1,0 +1,68 @@
+<script type="text/javascript">
+    RED.nodes.registerType('ppUPS', {
+        category: 'Pi_Plates',
+        color: '#87A980',
+        defaults: {
+            config_plate: { value: '', type: "pi_plate"},
+            name: { value: ''}
+        },
+        inputs: 1,
+        outputs: 3,
+        icon: "font-awesome/fa-bolt",
+        paletteLabel: 'UPS',
+        label: function () {
+            return (this.name || 'UPS');
+        },
+        outputLabels: ['NO_AC', 'LOW_BAT', 'LOW_DC_IN'],
+        oneditprepare: function() {
+            var node = this;
+            node.prev_config_id = $("#node-input-config_plate").val();
+            node.plate_model = 'unknown';
+
+            function draw_form() {
+                $("#invalid_plate_section").hide()
+                var config_id = $("#node-input-config_plate").val()
+                if (config_id == "_ADD_") {
+                    // no config node yet
+                } else {
+                    node.config_node = RED.nodes.node(config_id)
+                    node.plate_model = node.config_node.model;
+
+                    if (node.plate_model == "POWERplate24") {
+                        // valid plate type
+                    } else {
+                        $("#invalid_plate_section").show();
+                    }
+                }
+            } //draw_form()
+
+            $("#node-input-config_plate").on('focus', function() {node.prev_config_id = this.value}).change(function() {
+                // if config node selection has changed, clear our form selection and redraw the form
+                if (node.prev_config_id !== this.value) {
+                    node.plate_model = null;
+                }
+                draw_form()
+            });
+        } //oneditprepare()
+    });
+</script>
+
+<script type="text/x-red" data-template-name="ppUPS">
+    <div class="form-row">
+        <label for="node-input-config_plate"><i class="icon-tag"></i> Plate</label>
+        <input type="text" id="node-input-config_plate">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row" id="invalid_plate_section">
+        <h2 style="color: red">Invalid plate selected</h2>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="ppUPS">
+    <p>UPS node accepts any input and reports POWERplate24 UPS feature conditions.  A "NO_AC" message with value 'True' indicates
+       loss of AC power to the Meanwell DRC power supply.  A "LOW_BAT" True message indicates that the battery (pack) attached to
+       the DRC power supply has reached a low level of charge, and you may want to initiate a system shutdown.</p>
+</script>

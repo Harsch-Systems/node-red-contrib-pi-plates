@@ -30,16 +30,9 @@
 </script>
 
 <script type="text/x-red" data-help-name="ppLED">
-<<<<<<< HEAD
-    <p>Control onboard LED(s) for various Pi-Plates.  All plates accept the following input
-    strings: 'on', 'off', and 'toggle'.  DAQC accepts 'red', 'green', or 'yellow'.
-    DAQC2 accepts 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', and 'white'.
-    output is 1 for 'on' state and 0 for 'off' state, or 'unknown' if plate can't tell state.
-    </p>
-=======
     <p>Control onboard LED(s) for various Pi-Plates.  The node accepts the following input
-    strings: 'on', 'off', 'toggle'.  DAQC accepts 'red', 'green', or 'yellow',
+    strings: 'on', and 'off'.  All plates except POWERplate24 accept 'toggle'. DAQC and
+    POWERplate24 each accept 'red', 'green', or 'yellow'.
     DAQC2 accepts 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', and 'white'.
-    other string input is interpreted as 'on', non-string input is invalid.</p>
->>>>>>> 770b9a25be3f2ebbc61939b54ef837e13caa0d56
+    Any other string input is interpreted as 'on', non-string input is invalid.</p>
 </script>

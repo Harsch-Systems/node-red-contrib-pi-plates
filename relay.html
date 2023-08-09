@@ -28,6 +28,8 @@
                     return(relay_labels[relay_index]);
                 } else if (node.plate_model == "RELAYplate2") {
                     return(relay2_labels[relay_index]);
+                } else if (node.plate_model == "POWERplate24") {
+                    return('Fan');
                 } else {
                     return('');
                 }
@@ -78,6 +80,11 @@
                             $('#node-input-relay').append('<option value="' + tink_options[i].value + '">' + tink_options[i].name + '</option>');
                         $("#relay_section").show()
 
+                    } else if (node.plate_model == "POWERplate24") {
+                        node.outputLabels = ["fan state"];
+                        $('#node-input-relay').append('<option value="fan">Onboard Fan</option>');
+                        $("#relay_section").show()
+
                     } else {
                         $("#invalid_plate_section").show();
                         $("#relay_section").hide();
@@ -125,4 +132,5 @@
     <p>Send "toggle" to toggle the relay.</p>
     <p>Send "state" to read the state of the relay.</p>
     <p>The node will send the relay's new state to it's output (1 for "on", 0 for "off")</p>
+    <p>The POWERplate24 onboard fan is a special case: use "on", "off", or "state" to control fan.</p>
 </script>

@@ -4,7 +4,11 @@ module.exports = function (RED) {
         this.config_node = RED.nodes.getNode(config.config_plate);
         this.plate = this.config_node.plate;
         this.plate_model = this.config_node.model;
-        this.relay = parseInt(config.relay, 10);
+        if (this.plate_model !== "POWERplate24") {
+            this.relay = parseInt(config.relay, 10);
+        } else {
+            this.relay = config.relay;
+        }
         this.state = "UNKNOWN";
 
         var node = this;
@@ -12,22 +16,37 @@ module.exports = function (RED) {
             let type = RED.nodes.getNode(config.config_plate).model;
             let relayValid = (type == "RELAYplate2" && node.relay <= 8 ||
                               type == "RELAYplate" && node.relay < 8 ||
+                              type == "POWERplate24" && node.relay == "fan" ||
                               type == "TINKERplate" && node.relay < 3);
 
             let validInputs = ["on", "off", "toggle", "state"];
-            let inputValid = (typeof msg.payload === 'string' && validInputs.includes(msg.payload));
+            let validFanInputs = ["on", "off", "state"];
+            let inputValid =
+                (type !== "POWERplate24" && typeof msg.payload === 'string' && validInputs.includes(msg.payload)) ||
+                (type == "POWERplate24" && typeof msg.payload === 'string' && validFanInputs.includes(msg.payload));
 
             if (!node.plate.plate_status && relayValid && inputValid) {
                 const obj = {args: {relay: node.relay}};
-                if (msg.payload == "on") {
-                    obj['cmd'] = "relayON";
-                } else if (msg.payload == "off") {
-                    obj['cmd'] = "relayOFF";
-                } else if (msg.payload == "toggle") {
-                    obj['cmd'] = "relayTOGGLE";
-                } else if (msg.payload == "state") {
-                    obj['cmd'] = "relaySTATE";
-                }
+
+                if (type !== "POWERplate24") {
+                    if (msg.payload == "on") {
+                        obj['cmd'] = "relayON";
+                    } else if (msg.payload == "off") {
+                        obj['cmd'] = "relayOFF";
+                    } else if (msg.payload == "toggle") {
+                        obj['cmd'] = "relayTOGGLE";
+                    } else if (msg.payload == "state") {
+                        obj['cmd'] = "relaySTATE";
+                    }
+                } else if (type == "POWERplate24")
+                    if (msg.payload == "on") {
+                        obj['cmd'] = "fanON";
+                    } else if (msg.payload == "off") {
+                        obj['cmd'] = "fanOFF";
+                    } else if (msg.payload == "state") {
+                        obj['cmd'] = "fanSTATE";
+                    }
+
                 node.plate.send(obj, (reply) => {
                     if (reply.state != node.state) {
                         node.state = reply.state

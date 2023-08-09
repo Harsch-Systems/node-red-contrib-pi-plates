@@ -28,6 +28,14 @@
                     return(daqc_labels[chan_index]);
                 } else if (node.plate_model == "ADCplate") {
                     return(node.channel);
+                } else if (node.plate_model == "POWERplate24") {
+                    if (node.channel == "getVin") {
+                        return("5v input");
+                    } else if (node.channel = "getHVin") {
+                        return("HV input");
+                    } else {
+                        return('');
+                    }
                 } else {
                     return('');
                 }
@@ -78,6 +86,11 @@
                         ]
                         for (var i = 0; i < tinker_options.length; i++)
                             $('#node-input-channel').append('<option value="' + tinker_options[i].value + '">' + tinker_options[i].name + '</option>');
+                        $("#channel_section").show()
+
+                    } else if (node.plate_model == "POWERplate24") {
+                        $('#node-input-channel').append('<option value="' + "getVin" + '">5v input</option>');
+                        $('#node-input-channel').append('<option value="' + "getHVin" + '">HV input</option>');
                         $("#channel_section").show()
 
                     } else if (node.plate_model == "ADCplate") {

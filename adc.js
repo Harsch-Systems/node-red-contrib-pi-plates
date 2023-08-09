@@ -10,7 +10,9 @@ module.exports = function (RED) {
 
         var node = this;
 
-        if (this.plate_model !== "ADCplate") {
+        if (this.plate_model == "POWERplate24") {
+            this.channel = config.channel;
+        } else if (this.plate_model !== "ADCplate") {
             this.channel = parseInt(config.channel, 10)
         } else {
             this.channel = config.channel;
@@ -26,6 +28,7 @@ module.exports = function (RED) {
             let channelValid =
                 ((type == "DAQCplate" || type == "DAQC2plate") && (0 <= node.channel && node.channel < 9)) ||
                 (type == "TINKERplate" && (1 <= node.channel && node.channel < 5)) ||
+                (type == "POWERplate24" && node.channel.match(/H?Vin/) ) ||
                 (type == "ADCplate" && (node.channel.match(/^S[0-7]/) || node.channel.match(/^D[0-3]/) ));
 
             if (!node.plate.plate_status && channelValid) {
