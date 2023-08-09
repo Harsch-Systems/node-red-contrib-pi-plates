@@ -47,7 +47,7 @@
     "iot"
   ],
   "engines": {
-    "node": ">=16"
+    "node": ">=14"
   },
   "author": "Mike Harsch <mike@harschsystems.com>",
   "license": "Apache-2.0",
