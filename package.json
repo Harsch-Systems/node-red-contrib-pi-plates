@@ -27,7 +27,8 @@
       "ppTHERMO": "thermo.js",
       "ppPWM": "pwm.js",
       "ppMOTOR": "motor.js",
-      "ppUPS": "ups.js"
+      "ppUPS": "ups.js",
+      "ppOSC": "osc.js"
     }
   },
   "dependencies": {
