@@ -28,7 +28,7 @@
       "ppPWM": "pwm.js",
       "ppMOTOR": "motor.js",
       "ppUPS": "ups.js",
-      "ppOSC": "osc.js",
+      "ppOSC": "osc.js"
     }
   },
   "dependencies": {
