@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-pi-plates",
-  "version": "0.2.5",
+  "version": "0.3.0",
   "description": "control Pi-Plates boards from Node-RED",
   "scripts": {
     "test": "scripts/test",
@@ -31,7 +31,7 @@
     }
   },
   "dependencies": {
-    "pi-plates": ">=0.2.4"
+    "pi-plates": ">=0.3.0"
   },
   "keywords": [
     "node-red",
