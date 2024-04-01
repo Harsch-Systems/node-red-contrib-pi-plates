@@ -14,8 +14,20 @@ communication with <a href="https://pi-plates.com">Pi-Plates</a> boards.
  - CURRENTplate
  - DIGIplate
 
+Prerequisites
+-------
+You will need the python3-venv package.  This is included by default in Raspberry Pi OS 'Bookworm' but not in previous releases.
+```
+sudo apt install python3-venv
+```
+Also, the SPI interface must be enabled.  This is done using the 'sudo raspi-config' command under 'Interface Options' -> 'SPI' 
+
 Install
 -------
+
+As of the 0.3.0 release, this package utilizes it's own python virtual environment that contains the pi-plates python
+package.  This is automatically initialized when this package is installed, so it is no longer necessary to manually
+download and install the python pi-plates package.
 
 Run the following command in your Node-RED user directory - typically `~/.node-red`
 
@@ -25,10 +37,4 @@ Run the following command in your Node-RED user directory - typically `~/.node-r
 Usage
 -----
 
-First, make sure the Pi-Plates stack is working with the standard python interface by
-following the Getting Started setup steps [here](https://pi-plates.com/getting_started/).
-Note: this package requires python 3.x provided by the 'python3' command, so follow all
-the python3 instructions for the Pi Plates library and ignore the 2.x variants.
-The node actually uses a python script under the hood (similar to the stock gpio node) so
-if the Pi Plates python interface isn't setup and working, then this will not work either.
-
+See built-in documentation for each node.
