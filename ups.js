@@ -38,9 +38,6 @@ module.exports = function (RED) {
             } else if (node.plate.plate_status == 3) {
                 node.status({fill: "red", shape: "ring", text: "python process error"});
                 node.log("python process error");
-            } else if (!channelValid) {
-                node.status({fill: "red", shape: "ring", text: "invalid channel"});
-                node.log("invalid channel");
             }
             if (done) {
                 done();
