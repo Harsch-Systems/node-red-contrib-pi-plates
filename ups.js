@@ -11,9 +11,9 @@ module.exports = function (RED) {
             if (!node.plate.plate_status && plateValid) {
                 const obj = {cmd: "getPOWstatus", args: {}};
                 node.plate.send(obj, (reply) => {
-                    msg1 = {payload: reply['NO_AC']};
-                    msg2 = {payload: reply['LOW_BAT']};
-                    msg3 = {payload: reply['LOW_DC_IN']};
+                    const msg1 = {payload: reply['NO_AC']};
+                    const msg2 = {payload: reply['LOW_BAT']};
+                    const msg3 = {payload: reply['LOW_DC_IN']};
                     status_text = "";
                     if (msg1.payload) {
                         status_text += "NO AC";
@@ -21,10 +21,10 @@ module.exports = function (RED) {
                     if (msg2.payload) {
                         status_text += " LOW BAT";
                     }
-                    if (msg2.payload) {
+                    if (msg3.payload) {
                         status_text += " LOW DC IN";
                     }
-                    node.status({text: status_text});
+                    status_text ? node.status({text: status_text.trim()}) : node.status({});
                     send([msg1, msg2, msg3]);
                 });
             } else if (node.plate.plate_status == 1) {
