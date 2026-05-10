@@ -37,6 +37,7 @@ module.exports = function (RED) {
                     node.status({text: node.milliamps + ' mA'});
                     msg.payload = node.milliamps;
                     send(msg);
+                    done();
                 });
             } else if (node.plate.plate_status == 1) {
                 node.status({fill: "red", shape: "ring", text: "invalid plate"});
@@ -51,9 +52,6 @@ module.exports = function (RED) {
             } else if (!channelValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid channel"});
                 node.log("invalid channel");
-            }
-            if (done) {
-                done();
             }
         });
 

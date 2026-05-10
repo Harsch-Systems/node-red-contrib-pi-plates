@@ -18,6 +18,7 @@ module.exports = function (RED) {
                     node.status({text: node.value});
                     msg.payload = node.value;
                     send(msg);
+                    done();
                 });
             } else if (node.plate.plate_status == 1) {
                 node.status({fill: "red", shape: "ring", text: "invalid plate"});
@@ -36,9 +37,6 @@ module.exports = function (RED) {
             } else if (!inputValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid DAC value: ignoring"});
                 node.log("invalid DAC value: ignoring");
-            }
-            if (done) {
-                done();
             }
         });
 

@@ -26,6 +26,7 @@ module.exports = function (RED) {
                     }
                     status_text ? node.status({text: status_text.trim()}) : node.status({});
                     send([msg1, msg2, msg3]);
+                    done();
                 });
             } else if (node.plate.plate_status == 1) {
                 node.status({fill: "red", shape: "ring", text: "invalid plate"});
@@ -38,9 +39,6 @@ module.exports = function (RED) {
             } else if (node.plate.plate_status == 3) {
                 node.status({fill: "red", shape: "ring", text: "python process error"});
                 node.log("python process error");
-            }
-            if (done) {
-                done();
             }
         });
 

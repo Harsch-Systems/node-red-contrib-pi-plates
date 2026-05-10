@@ -47,6 +47,7 @@ module.exports = function (RED) {
                         node.status({ text: node.state });
                         msg.payload = node.state;
                         send(msg);
+                        done();
                     });
                 }
             } else if (node.plate.plate_status == 1) {
@@ -62,9 +63,6 @@ module.exports = function (RED) {
             } else if (!inputValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid input"});
                 node.log("invalid input");
-            }
-            if (done) {
-                done();
             }
         });
 

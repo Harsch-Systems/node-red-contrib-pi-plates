@@ -27,6 +27,7 @@ module.exports = function (RED) {
                     node.plate.send(obj, (reply) => {
                         node.state = reply.state
                         node.status({text: node.state});
+                        done();
                     });
                 } else {
                     node.log("malformed obj, missing 'cmd'");
@@ -46,9 +47,6 @@ module.exports = function (RED) {
             } else if (!inputValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid input"});
                 node.log("invalid input");
-            }
-            if (done) {
-                done();
             }
         });
     }
