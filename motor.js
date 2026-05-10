@@ -7,12 +7,12 @@ module.exports = function (RED) {
 
         var node = this;
         node.on('input', function (msg, send, done) {
-            let type = RED.nodes.getNode(config.config_plate).model;
+            let type = node.plate.model;
             let validInputs = ["start", "stop"];
             let inputValid = (typeof msg.payload === 'string' && validInputs.includes(msg.payload) ||
                 typeof msg.payload === 'object' && Object.keys(msg.payload).includes("speed"));
 
-            if (!node.plate.plate_status && inputValid) {
+            if (!node.plate.plate_status && type == "MOTORplate" && inputValid) {
                 const obj = {args: {motor: node.motor}};
                 if (msg.payload == "start") {
                     obj['cmd'] = "dcSTART";

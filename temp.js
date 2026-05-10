@@ -14,7 +14,7 @@ module.exports = function (RED) {
         if (RED.nodes.getNode(config.config_plate).model == "TINKERplate") {
             if (channelValid) {
                 const conf = {cmd: "setTEMP", args: {bit: node.input}};
-                node.plate.send(conf, (reply) => {});
+                node.plate.send(conf, () => {});
             } else {
                 node.status({fill: "red", shape: "ring", text: "invalid channel"});
                 node.log("invalid channel");

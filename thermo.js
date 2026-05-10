@@ -18,7 +18,7 @@ module.exports = function (RED) {
 
         if (this.channel >= 1 && this.channel <= 8 && this.tc_type == 'j') {
             let typeobj = {cmd: 'setTYPE', args: {channel: this.channel, tc_type: this.tc_type}};
-            this.plate.send(typeobj, (reply) => {
+            this.plate.send(typeobj, () => {
                 // thermocouple set to J-type
             });
         }

@@ -14,7 +14,7 @@ module.exports = function (RED) {
                     const msg1 = {payload: reply['NO_AC']};
                     const msg2 = {payload: reply['LOW_BAT']};
                     const msg3 = {payload: reply['LOW_DC_IN']};
-                    status_text = "";
+                    let status_text = "";
                     if (msg1.payload) {
                         status_text += "NO AC";
                     }

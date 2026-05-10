@@ -38,7 +38,7 @@ module.exports = function (RED) {
                     } else if (msg.payload == "state") {
                         obj['cmd'] = "relaySTATE";
                     }
-                } else if (type == "POWERplate24")
+                } else if (type == "POWERplate24") {
                     if (msg.payload == "on") {
                         obj['cmd'] = "fanON";
                     } else if (msg.payload == "off") {
@@ -46,6 +46,7 @@ module.exports = function (RED) {
                     } else if (msg.payload == "state") {
                         obj['cmd'] = "fanSTATE";
                     }
+                }
 
                 node.plate.send(obj, (reply) => {
                     if (reply.state != node.state) {

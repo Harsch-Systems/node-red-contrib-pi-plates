@@ -9,7 +9,7 @@ module.exports = function (RED) {
 
         if (RED.nodes.getNode(config.config_plate).model == "TINKERplate") {
             const conf = {cmd: "setIN", args: {bit: node.input}};
-            node.plate.send(conf, (reply) => {});
+            node.plate.send(conf, () => {});
         }
 
         node.on('input', function (msg, send, done) {

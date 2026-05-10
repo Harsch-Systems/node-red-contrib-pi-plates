@@ -27,7 +27,7 @@ module.exports = function (RED) {
             if (type == "TINKERplate") {
                 if (channelValid) {
                     const conf = {cmd: "setPWMmode", args: {bit: node.channel}};
-                    node.plate.send(conf, (reply) => {});
+                    node.plate.send(conf, () => {});
                 } else {
                     node.status({fill: "red", shape: "ring", text: "invalid channel"});
                     node.log("invalid channel");

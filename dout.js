@@ -6,7 +6,7 @@ module.exports = function (RED) {
 
         if (RED.nodes.getNode(config.config_plate).model == "TINKERplate") {
             const conf = {cmd: "setOUT", args: {bit: this.output}};
-            this.plate.send(conf, (reply) => {});
+            this.plate.send(conf, () => {});
         }
 
         var node = this;

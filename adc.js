@@ -18,7 +18,7 @@ module.exports = function (RED) {
             this.channel = config.channel;
             // set to Easy Mode (Medium accuracy)
             const conf = {cmd: "setMODE", args: {mode: 'MED'}};
-            node.plate.send(conf, (reply) => {});
+            node.plate.send(conf, () => {});
         }
 
         node.on('input', function (msg, send, done) {
