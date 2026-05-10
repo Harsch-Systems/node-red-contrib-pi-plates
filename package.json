@@ -4,7 +4,7 @@
   "description": "control Pi-Plates boards from Node-RED",
   "scripts": {
     "test": "scripts/test",
-    "jscs": "jscs -c .jscsrc -m 1 *.js"
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -54,5 +54,10 @@
   "bugs": {
     "url": "https://github.com/Harsch-Systems/node-red-contrib-pi-plates/issues"
   },
-  "homepage": "https://github.com/Harsch-Systems/node-red-contrib-pi-plates#readme"
+  "homepage": "https://github.com/Harsch-Systems/node-red-contrib-pi-plates#readme",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.3.0",
+    "globals": "^17.6.0"
+  }
 }
