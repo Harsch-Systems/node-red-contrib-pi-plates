@@ -37,7 +37,7 @@ module.exports = function (RED) {
                         return;
                     }
                     node.temperature = reply.value;
-                    node.status({text: node.temperature});
+                    node.status({text: String(node.temperature)});
                     msg.payload = node.temperature;
                     send(msg);
                     done();

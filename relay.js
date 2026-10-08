@@ -57,7 +57,7 @@ module.exports = function (RED) {
                     }
                     if (reply.state != node.state) {
                         node.state = reply.state
-                        node.status({text: node.state});
+                        node.status({text: String(node.state)});
                     }
                     msg.payload = node.state;
                     send(msg);

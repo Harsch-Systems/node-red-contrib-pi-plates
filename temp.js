@@ -31,7 +31,7 @@ module.exports = function (RED) {
                         return;
                     }
                     node.temp = reply.temp;
-                    node.status({text: node.temp});
+                    node.status({text: String(node.temp)});
                     msg.payload = node.temp;
                     send(msg);
                     done();

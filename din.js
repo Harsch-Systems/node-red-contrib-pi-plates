@@ -47,7 +47,7 @@ module.exports = function (RED) {
                         return;
                     }
                     node.state = reply.state;
-                    node.status({text: node.state});
+                    node.status({text: String(node.state)});
                     msg.payload = node.state;
                     send(msg);
                     done();

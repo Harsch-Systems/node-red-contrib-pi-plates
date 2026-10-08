@@ -20,7 +20,7 @@ module.exports = function (RED) {
                         return;
                     }
                     node.value = reply.value;
-                    node.status({text: node.value});
+                    node.status({text: String(node.value)});
                     msg.payload = node.value;
                     send(msg);
                     done();

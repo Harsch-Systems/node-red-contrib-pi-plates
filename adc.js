@@ -40,7 +40,7 @@ module.exports = function (RED) {
                         return;
                     }
                     node.voltage = reply.voltage
-                    node.status({text: node.voltage});
+                    node.status({text: String(node.voltage)});
                     msg.payload = node.voltage;
                     send(msg);
                     done();

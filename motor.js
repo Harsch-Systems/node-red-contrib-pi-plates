@@ -31,7 +31,7 @@ module.exports = function (RED) {
                             return;
                         }
                         node.state = reply.state
-                        node.status({text: node.state});
+                        node.status({text: String(node.state)});
                         done();
                     });
                 } else {
