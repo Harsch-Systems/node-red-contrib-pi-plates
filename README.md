@@ -33,6 +33,38 @@ Run the following command in your Node-RED user directory - typically `~/.node-r
 
     npm install node-red-contrib-pi-plates
 
+Upgrading from 0.3.0 to 0.4.0
+-----------------------------
+
+Existing flows work without changes: node types and settings are the same. Upgrade with:
+
+    npm install node-red-contrib-pi-plates@0.4.0
+
+This also installs pi-plates 0.4.0, which it requires. Then restart Node-RED.
+
+What behaves differently:
+
+ - **Failed commands raise errors.** If a command fails, the node shows a red
+   "command failed" status and raises an error that Catch nodes receive. In 0.3.0
+   the message was silently lost, and if the python co-process crashed every node
+   went silent until Node-RED was restarted.
+ - **Recovery is automatic.** If the python co-process crashes it restarts by itself,
+   and nodes carry on once it is back.
+ - **"plate not ready" status.** Messages that arrive before a plate has been verified,
+   or while the co-process is restarting, are dropped with a yellow
+   "plate not ready" status.
+ - **LED node output.** The LED node now outputs the new LED state (`1`/`0`) in cases
+   where 0.3.0 output `undefined`, e.g. toggling a DAQC2plate LED.
+
+**Upgrade both packages together.** node-red-contrib-pi-plates 0.3.0 accepts any
+pi-plates version from 0.3.0 up, but it is not compatible with pi-plates 0.4.0: some
+nodes can crash Node-RED when a command fails. If you need to stay on
+node-red-contrib-pi-plates 0.3.0, pin pi-plates to 0.3.0 by adding this to the
+`package.json` in your Node-RED user directory and running `npm install` there:
+
+    "overrides": {
+        "pi-plates": "0.3.0"
+    }
 
 Usage
 -----
