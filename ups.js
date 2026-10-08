@@ -11,6 +11,11 @@ module.exports = function (RED) {
             if (!node.plate.plate_status && plateValid) {
                 const obj = {cmd: "getPOWstatus", args: {}};
                 node.plate.send(obj, (reply) => {
+                    if (reply.error) {
+                        node.status({fill: "red", shape: "ring", text: "command failed"});
+                        done(reply.error);
+                        return;
+                    }
                     const msg1 = {payload: reply['NO_AC']};
                     const msg2 = {payload: reply['LOW_BAT']};
                     const msg3 = {payload: reply['LOW_DC_IN']};
@@ -39,6 +44,11 @@ module.exports = function (RED) {
             } else if (node.plate.plate_status == 3) {
                 node.status({fill: "red", shape: "ring", text: "python process error"});
                 node.log("python process error");
+
+                node.plate.update_status();
+            } else if (node.plate.plate_status == 4) {
+                node.status({fill: "yellow", shape: "ring", text: "plate not ready"});
+                node.log("plate not ready");
             }
         });
 

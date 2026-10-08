@@ -25,8 +25,13 @@ module.exports = function (RED) {
             if (!node.plate.plate_status && channelValid) {
                 const obj = {cmd: "getTEMP", args: {bit: node.input, scale: node.scale}};
                 node.plate.send(obj, (reply) => {
+                    if (reply.error) {
+                        node.status({fill: "red", shape: "ring", text: "command failed"});
+                        done(reply.error);
+                        return;
+                    }
                     node.temp = reply.temp;
-                    node.status({text: node.temp});
+                    node.status({text: String(node.temp)});
                     msg.payload = node.temp;
                     send(msg);
                     done();
@@ -42,6 +47,11 @@ module.exports = function (RED) {
             } else if (node.plate.plate_status == 3) {
                 node.status({fill: "red", shape: "ring", text: "python process error"});
                 node.log("python process error");
+
+                node.plate.update_status();
+            } else if (node.plate.plate_status == 4) {
+                node.status({fill: "yellow", shape: "ring", text: "plate not ready"});
+                node.log("plate not ready");
             } else if (!channelValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid channel"});
                 node.log("invalid channel");

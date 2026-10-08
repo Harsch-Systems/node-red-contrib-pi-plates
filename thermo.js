@@ -16,24 +16,28 @@ module.exports = function (RED) {
             this.tc_type = 'k';
         }
 
-        if (this.channel >= 1 && this.channel <= 8 && this.tc_type == 'j') {
-            let typeobj = {cmd: 'setTYPE', args: {channel: this.channel, tc_type: this.tc_type}};
-            this.plate.send(typeobj, () => {
-                // thermocouple set to J-type
-            });
-        }
-
         var node = this;
         node.on('input', function (msg, send, done) {
             let type = RED.nodes.getNode(config.config_plate).model;
             let channelValid = (type == "THERMOplate");
 
             if (!node.plate.plate_status && channelValid) {
+                // setTYPE only lives in the python co-process (not on the
+                // plate), so resend it in case the co-process has restarted
+                if (node.channel >= 1 && node.channel <= 8 && node.tc_type == 'j') {
+                    const typeobj = {cmd: 'setTYPE', args: {channel: node.channel, tc_type: node.tc_type}};
+                    node.plate.send(typeobj, () => {});
+                }
                 const cmd = node.channel==0 ? 'getCOLD' : 'getTEMP';
                 const obj = {cmd: cmd, args: {channel: node.channel, scale: node.scale}};
                 node.plate.send(obj, (reply) => {
+                    if (reply.error) {
+                        node.status({fill: "red", shape: "ring", text: "command failed"});
+                        done(reply.error);
+                        return;
+                    }
                     node.temperature = reply.value;
-                    node.status({text: node.temperature});
+                    node.status({text: String(node.temperature)});
                     msg.payload = node.temperature;
                     send(msg);
                     done();
@@ -49,6 +53,11 @@ module.exports = function (RED) {
             } else if (node.plate.plate_status == 3) {
                 node.status({fill: "red", shape: "ring", text: "python process error"});
                 node.log("python process error");
+
+                node.plate.update_status();
+            } else if (node.plate.plate_status == 4) {
+                node.status({fill: "yellow", shape: "ring", text: "plate not ready"});
+                node.log("plate not ready");
             } else if (!channelValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid plate type"});
                 node.log("invalid plate type");
