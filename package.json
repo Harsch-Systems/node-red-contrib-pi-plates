@@ -31,7 +31,7 @@
     }
   },
   "dependencies": {
-    "pi-plates": ">=0.3.0"
+    "pi-plates": ">=0.4.0"
   },
   "keywords": [
     "node-red",

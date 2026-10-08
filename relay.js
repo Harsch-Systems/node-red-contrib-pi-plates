@@ -49,6 +49,12 @@ module.exports = function (RED) {
                 }
 
                 node.plate.send(obj, (reply) => {
+                    if (reply.error) {
+                        node.state = "UNKNOWN";
+                        node.status({fill: "red", shape: "ring", text: "command failed"});
+                        done(reply.error);
+                        return;
+                    }
                     if (reply.state != node.state) {
                         node.state = reply.state
                         node.status({text: node.state});
@@ -68,6 +74,11 @@ module.exports = function (RED) {
             } else if (node.plate.plate_status == 3) {
                 node.status({fill: "red", shape: "ring", text: "python process error"});
                 node.log("python process error");
+
+                node.plate.update_status();
+            } else if (node.plate.plate_status == 4) {
+                node.status({fill: "yellow", shape: "ring", text: "plate not ready"});
+                node.log("plate not ready");
             } else if (!relayValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid relay"});
                 node.log("invalid relay");

@@ -29,6 +29,11 @@ module.exports = function (RED) {
                     obj['cmd'] = "toggleDOUTbit";
                 }
                 node.plate.send(obj, (reply) => {
+                    if (reply.error) {
+                        node.status({fill: "red", shape: "ring", text: "command failed"});
+                        done(reply.error);
+                        return;
+                    }
                     node.state = reply.state;
                     node.status({text: node.state});
                     msg.payload = node.state;
@@ -46,6 +51,11 @@ module.exports = function (RED) {
             } else if (node.plate.plate_status == 3) {
                 node.status({fill: "red", shape: "ring", text: "python process error"});
                 node.log("python process error");
+
+                node.plate.update_status();
+            } else if (node.plate.plate_status == 4) {
+                node.status({fill: "yellow", shape: "ring", text: "plate not ready"});
+                node.log("plate not ready");
             } else if (!channelValid) {
                 node.status({fill: "red", shape: "ring", text: "invalid channel"});
                 node.log("invalid channel");
